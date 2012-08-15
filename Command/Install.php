@@ -8,6 +8,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Install extends ContainerAwareCommand {
-  
+  public function download() {
+  	$url = $this->container->getParameter('webit_extjs.download_url');
+  	
+  }
 }
 ?>

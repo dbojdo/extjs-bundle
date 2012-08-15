@@ -1,0 +1,30 @@
+{
+	"name" : "webit/extjs-bundle",
+	"type": "symfony-bundle",
+	"description": "Web-IT ExtJS Bundle",
+	"keywords": ["web-it","extjs"],
+	"homepage": "http://www.web-it.eu",
+	"license": "Web-IT",
+	"authors": [
+		{
+			"name": "Web-IT",
+			"homepage": "http://www.web-it.eu"
+		}
+	],
+	"repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.web-it.eu"
+        }
+    ],
+	"require": {
+		"php": ">=5.3.2",
+		"symfony/symfony": "2.1.*",
+	},
+	"autoload": {
+		"psr-0": {
+			"Webit\\Bundle\\ExtjsBundle" : ""
+		}
+	},
+	"target-dir" : "Webit/Bundle/ExtjsBundle"
+}
