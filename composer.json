@@ -23,8 +23,8 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"Webit\\Bundle\\ExtjsBundle" : ""
+			"Webit\\Bundle\\ExtJsBundle" : ""
 		}
 	},
-	"target-dir" : "Webit/Bundle/ExtjsBundle"
+	"target-dir" : "Webit/Bundle/ExtJsBundle"
 }
