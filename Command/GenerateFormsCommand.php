@@ -125,7 +125,7 @@ class GenerateFormsCommand extends ContainerAwareCommand {
 		$cm = $dm->getClassMetadata($class);
 		
 		$arFields = array();
-		$arFields[] = array('name'=>$cm->getIdentifier(),'type'=>'string');
+		$arFields[] = array('xtype'=>'hidden','name'=>$cm->getIdentifier());
 		foreach($cm->getFieldNames() as $fieldName) {
 			$arField = $cm->getFieldMapping($fieldName);
 			if($arField['name'] == 'jcr:uuid') {

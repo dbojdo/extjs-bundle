@@ -14,11 +14,11 @@ class FormElementsMap {
 		switch($fieldType) {
 			case 'float':
 				$arField['xtype'] = 'numberfield';
-				$arField['allowDecimal'] = true;
+				$arField['allowDecimals'] = true;
 			break;
 			case 'int':
 				$arField['xtype'] = 'numberfield';
-				$arField['allowDecimal'] = false;
+				$arField['allowDecimals'] = false;
 			break;
 			case 'bool':
 				$arField['xtype'] = 'checkbox';
