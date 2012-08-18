@@ -1,0 +1,16 @@
+Ext.application({
+    name: '{{ appName }}',
+    appFolder: '{{ appFolder|raw }}',
+    autoCreateViewport : true,
+    models : [{% for subclass in extjsSubclasses %}
+    '{{ appName }}.model.{{ subclass }}'{% if loop.last == false %},{% endif %}
+    
+    {% endfor %}
+		],
+    stores : [
+    {% for subclass in extjsSubclasses %}
+    '{{ appName }}.store.{{ subclass }}'{% if loop.last == false %},{% endif %}
+    
+    {% endfor %}
+    ]
+});

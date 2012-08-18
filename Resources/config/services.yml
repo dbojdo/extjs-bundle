@@ -1,0 +1,17 @@
+parameters:
+  webit_ext_js.controller.extjs.class: Webit\Bundle\ExtJsBundle\Controller\ExtJsController
+  webit_ext_js.extjs_subclass_name_generator.class: Webit\Bundle\ExtJsBundle\Service\ExtJsSubclassNameGenerator
+  webit_ext_js.extjs_app_name_generator.class: Webit\Bundle\ExtJsBundle\Service\ExtJsAppNameGenerator
+  webit_ext_js.extjs_document_classes_provider.class: Webit\Bundle\ExtJsBundle\Service\ExtJsDocumentClassesProvider
+
+services:
+  webit_ext_js.controller.extjs:
+    class: %webit_ext_js.controller.extjs.class%
+    arguments: [@service_container,@fos_rest.view_handler]
+  webit_ext_js.ext_js_subclass_name_generator:
+    class: %webit_ext_js.extjs_subclass_name_generator.class%
+  webit_ext_js.extjs_app_name_generator:
+    class: %webit_ext_js.extjs_app_name_generator.class%
+  webit_ext_js.extjs_document_classes_provider:
+    class: %webit_ext_js.extjs_document_classes_provider.class%
+    arguments: [@webit_ext_js.ext_js_subclass_name_generator]

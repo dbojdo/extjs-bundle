@@ -1,0 +1,6 @@
+Ext.define('{{ appName }}.store.{{ extjsSubclass }}', {
+	extend: 'Ext.data.Store',
+	requires : '{{ appName }}.model.{{ extjsSubclass }}',
+	model : '{{ appName }}.model.{{ extjsSubclass }}',
+	storeId : '{{ appName|lower }}.{{ extjsSubclass|lower }}.store'
+});

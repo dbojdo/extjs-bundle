@@ -1,0 +1,11 @@
+Ext.define('{{ appName }}.view.form.{{ extjsSubclass }}', {
+	extend: 'Ext.form.Panel',
+	alias : 'widget.form.{{ appName|lower }}.{{ extjsSubclass|lower }}',
+	title : '{{ extjsSubclass }} Form',
+	items: [{% for key, field in fields %}{
+	{% for fkey, fvalue in field  %}
+	{{ fkey }} : '{{ fvalue|raw }}'{% if loop.last == false %},{% endif %}
+	
+	{% endfor %}
+}{% if loop.last == false %},{% endif %}{% endfor %}]
+});

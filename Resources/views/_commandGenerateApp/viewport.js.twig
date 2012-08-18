@@ -1,0 +1,13 @@
+Ext.define('{{ appName }}.view.Viewport', {
+	extend: 'Ext.container.Viewport',
+	layout: 'fit',
+	initComponent: function() {
+		this.items = [{
+			xtype : 'panel',
+			title : '{{ appName }} Application!',
+			html : '<h1>Hello! This is yout brand new {{ appName }} application!</h1>'
+		}];
+		
+		this.callParent();
+	}
+});

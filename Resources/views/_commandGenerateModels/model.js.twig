@@ -1,0 +1,11 @@
+Ext.define('{{ appName }}.model.{{ extjsSubclass }}', {
+	extend: 'Ext.data.Model',
+	fields: [{% for key, field in fields %}{
+		name : '{{ field.name }}',
+		type : '{{ field.type }}'
+	}{% if loop.last == false %},{% endif %}{% endfor %}],
+	proxy : {
+		type : 'rest',
+		url : '/catalog/products'
+	}
+});

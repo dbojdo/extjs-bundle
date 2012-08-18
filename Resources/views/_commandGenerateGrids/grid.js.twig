@@ -1,0 +1,12 @@
+Ext.define('{{ appName }}.view.grid.{{ extjsSubclass }}', {
+	extend : 'Ext.grid.Panel',
+	alias : 'widget.grid.{{ appName|lower }}.{{ extjsSubclass|lower }}',
+	title: '{{ extjsSubclass }} Grid',
+	store: Ext.data.StoreManager.lookup('{{ appName|lower }}.{{ extjsSubclass|lower }}.store'),
+	columns: [{% for key, column in columns %}{
+	{% for ckey, cvalue in column  %}
+	{{ ckey }} : '{{ cvalue|raw }}'{% if loop.last == false %},{% endif %}
+	
+	{% endfor %}
+}{% if loop.last == false %},{% endif %}{% endfor %}]
+});
