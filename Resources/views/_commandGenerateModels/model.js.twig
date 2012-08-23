@@ -5,7 +5,13 @@ Ext.define('{{ appName }}.model.{{ extjsSubclass }}', {
 		type : '{{ field.type }}'
 	}{% if loop.last == false %},{% endif %}{% endfor %}],
 	proxy : {
+		appendId : false,
 		type : 'rest',
-		url : '/catalog/products'
+		url : Routing.generate('{{ route_name }}'),
+		writer : {
+			xtype : 'json',
+			writeAllField : false,
+			allowSingle : false
+		}
 	}
 });

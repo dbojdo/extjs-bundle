@@ -52,7 +52,7 @@ class ExtJsController
 		$view = new View();
 		$view->setData(array('version'=>$version));
 		$view->setTemplate('WebitExtJsBundle::javascripts.html.twig');
-			
+		
 		return $this->viewHandler->handle($view);
 	}
 	
