@@ -1,0 +1,5 @@
+WebitExtJsBundle_store:
+    type: rest
+    resource: webit_ext_js.controller_store
+    options:
+        expose: true
