@@ -3,3 +3,9 @@ WebitExtJsBundle_store:
     resource: webit_ext_js.controller_store
     options:
         expose: true
+        
+WebitExtJsBundle_tree_store:
+    type: rest
+    resource: webit_ext_js.controller_tree_store
+    options:
+        expose: true

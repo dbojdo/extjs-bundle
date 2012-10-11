@@ -63,7 +63,7 @@ class StoreController extends FOSRestController {
      * 
      * @FOS\Route("/store/items")
      */
-    public function postProductsAction() {
+    public function postItemsAction() {
     	$arProducts = $this->getRequest()->request->get('data');
     	$arData = $this->container->get('serializer')->deserialize($arProducts,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
     	
@@ -76,7 +76,7 @@ class StoreController extends FOSRestController {
     /**
      * @FOS\Route("/store/items")
      */
-    public function putProductsAction() {
+    public function putItemsAction() {
     	$arProducts = $this->getRequest()->request->get('data');
     	$arData = $this->container->get('serializer')->deserialize($arProducts,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
 
@@ -87,13 +87,13 @@ class StoreController extends FOSRestController {
     } // update
 
     /**
-     * @FOS\QueryParam(name="product", description="Page of the overview.")
+     * @FOS\QueryParam(name="item", description="Page of the overview.")
      * @FOS\Route("/store/items")
      * 
      * 
      * @param ParamFetcher $paramFetcher
      */
-    public function deleteProductsAction(ParamFetcher $paramFetcher) {
+    public function deleteItemsAction(ParamFetcher $paramFetcher) {
     	$arProducts = $this->getRequest()->request->get('data');
     	$arData = $this->container->get('serializer')->deserialize($arProducts,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
     	
