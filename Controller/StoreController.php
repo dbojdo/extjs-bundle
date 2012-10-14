@@ -56,15 +56,17 @@ class StoreController extends FOSRestController {
      *  
      *  @param ParamFetcher $paramFetcher
      */
-    public function getItemsAction(ParamFetcher $paramFetcher) {
-    	$sort = $this->container->get('serializer')->deserialize($paramFetcher->get('sort'),'ArrayCollection','json');
-    	
+    public function getItemsAction(ParamFetcher $paramFetcher) {    	
     	$filters = $this->container->get('serializer')->deserialize($paramFetcher->get('filter'),'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Filter>','json');
     	$filters = new \Webit\Bundle\ExtJsBundle\Store\FilterCollection($filters);
     	
+    	$sort = $this->container->get('serializer')->deserialize($paramFetcher->get('sort'),'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Sorter>','json');
+    	$sort = new \Webit\Bundle\ExtJsBundle\Store\SorterCollection($sort);
+    	
 			$json = $this->getStore()->getModelList($this->getRequest()->query->all(), $filters, $sort, $paramFetcher->get('page'), $paramFetcher->get('limit'), $paramFetcher->get('start'));
+			$this->container->get('serializer')->setGroups($json->getSerializerGroups());
+			
     	$view = View::create($json);
-
     	return $this->handleView($view);
     }
     

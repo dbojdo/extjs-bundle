@@ -6,25 +6,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * 
  * @author dbojdo
- * @method FilterInterface get()
+ * @method SorterInterface get()
  */
 class SorterCollection extends ArrayCollection {
-	public function add($value) {
-		if($value instanceof SorterInterface) {
-			parent::add($filter);
-		} else {
-			throw new \InvalidArgumentException('Given value must be instance of Webit\Bundle\ExtJsBundle\Store\SorterInterface');
-		}
-	}
-	
-	public function toArray() {
-		$arSorters = array();
-		foreach($this as $sorter) {
-			$arSorter = array($sorter->getProperty() => $sorter->getDirection());
-			$arSorters[] = $arSorter;
+	public function getSorter($property) {
+		foreach($this as $item) {
+			if($item->getProperty() == $property) {
+				return $item;
+			}
 		}
 		
-		return $arSorters;
+		return null;
 	}
 }
 ?>

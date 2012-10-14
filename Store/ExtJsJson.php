@@ -87,13 +87,11 @@ class ExtJsJson implements ExtJsJsonInterface {
 	}
 	
 	public function getSerializerGroups() {
+		if(in_array('extjsResponse',$this->serializerGroups) && count($this->serializerGroups) == 1) {
+			return array();
+		}
+
 		return $this->serializerGroups;
 	}
-	
-//	public function __serialize() {
-//		$arResponse = array('success'=>$this->getSuccess(), 'data'=>$this->getData(), 'total'=>$this->getTotal(), 'message'=>$this->getMessage());
-		
-//		return serialize($arResponse);
-//	}
 }
 ?>
