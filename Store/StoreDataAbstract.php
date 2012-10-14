@@ -1,8 +1,18 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Store;
+use JMS\SerializerBundle\Annotation\Exclude;
+use JMS\SerializerBundle\Annotation\PostDeserialize;
 
-abstract class StoreDataAbstract implements SorterInterface {
+abstract class StoreDataAbstract {
+	/**
+	 * 
+	 * @var array
+	 * @Exclude
+	 */
+	protected $omitProperties = array();
+	
 	public function __construct($entity = null) {
+		$this->setOmitProperties($omitProperties = null);
 		if($entity) {
 			$this->fromEntity($entity);
 		}
@@ -14,7 +24,8 @@ abstract class StoreDataAbstract implements SorterInterface {
 		
 		$arMethods = $refObj->getMethods(\ReflectionMethod::IS_PUBLIC);
 		foreach($arMethods as $method) {
-			if(substr($method->getName(), 0,3) == 'set') {
+			$propertyName = lcfirst(substr($method->getName(), 3));
+			if(substr($method->getName(), 0,3) == 'set' && in_array($propertyName,$this->omitProperties) == false) {
 				$callback = array($entity,'get' . substr($method->getName(), 3));
 				if(is_callable($callback)) {
 					$this->{$method->getName()}(call_user_func($callback));
@@ -27,13 +38,26 @@ abstract class StoreDataAbstract implements SorterInterface {
 		$refObj = new \ReflectionObject($this);
 		$arMethods = $refObj->getMethods(\ReflectionMethod::IS_PUBLIC);
 		foreach($arMethods as $method) {
-			if(substr($method->getName(), 0,3) == 'get') {
-				$callback = array($entity,'set' . substr($method->getName(), 3));
+			$propertyName = lcfirst(substr($method->getName(), 3));
+			if(substr($method->getName(), 0,3) == 'get' && in_array($propertyName,$this->omitProperties) == false) {
+				$callback = array($entity,'set' . $propertyName);
 				if(is_callable($callback)) {
 					call_user_func($callback,$this->{$method->getName()}());
 				}
 			}
 		}
+	}
+	
+	protected function setOmitProperties(array $arProperties = null) {
+		$arProperties = $arProperties === null ? array() : $arProperties;
+		$this->omitProperties = $arProperties;
+	}
+	
+	/**
+	 * @PostDeserialize
+	 */
+	private function restoreOmitProperties() {
+		$this->setOmitProperties();
 	}
 }
 ?>

@@ -1,6 +1,8 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Controller;
 
+use Assetic\Filter\FilterCollection;
+
 use Doctrine\Common\Collections\ArrayCollection;
 
 use FOS\RestBundle\Controller\FOSRestController;
@@ -37,8 +39,10 @@ class StoreController extends FOSRestController {
 		 */
 		public function getItemAction(ParamFetcher $paramFetcher) {
 			$json = $this->getStore()->loadModel($paramFetcher->get('id'),$this->getRequest()->query->all());
-			$view = View::create($json);
+			$this->container->get('serializer')->setGroups($json->getSerializerGroups());
 			
+			$view = View::create($json);
+					
 			return $this->handleView($view);
 		}
 		
@@ -47,15 +51,20 @@ class StoreController extends FOSRestController {
      *  @FOS\QueryParam(name="limit", requirements="\d+", default="25", description="Limit")
      *  @FOS\QueryParam(name="start", requirements="\d+", default="0", description="Start")
      *  @FOS\QueryParam(name="sort", default="[{}]", description="Sort")
+     *  @FOS\QueryParam(name="filter", default="[{}]", description="Filters")
      *  @FOS\Route("/store/items")
      *  
      *  @param ParamFetcher $paramFetcher
      */
     public function getItemsAction(ParamFetcher $paramFetcher) {
-    	$sort = json_decode($paramFetcher->get('sort'));
-			$json = $this->getStore()->getModelList($this->getRequest()->query->all(), array(), $sort, $paramFetcher->get('page'), $paramFetcher->get('limit'), $paramFetcher->get('start'));
+    	$sort = $this->container->get('serializer')->deserialize($paramFetcher->get('sort'),'ArrayCollection','json');
+    	
+    	$filters = $this->container->get('serializer')->deserialize($paramFetcher->get('filter'),'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Filter>','json');
+    	$filters = new \Webit\Bundle\ExtJsBundle\Store\FilterCollection($filters);
+    	
+			$json = $this->getStore()->getModelList($this->getRequest()->query->all(), $filters, $sort, $paramFetcher->get('page'), $paramFetcher->get('limit'), $paramFetcher->get('start'));
     	$view = View::create($json);
-    	    	
+
     	return $this->handleView($view);
     }
     
