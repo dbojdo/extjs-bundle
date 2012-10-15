@@ -50,18 +50,18 @@ class StoreController extends FOSRestController {
      *  @FOS\QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
      *  @FOS\QueryParam(name="limit", requirements="\d+", default="25", description="Limit")
      *  @FOS\QueryParam(name="start", requirements="\d+", default="0", description="Start")
-     *  @FOS\QueryParam(name="sort", default="[{}]", description="Sort")
-     *  @FOS\QueryParam(name="filter", default="[{}]", description="Filters")
+     *  @FOS\QueryParam(name="sort", default="[]", description="Sort")
+     *  @FOS\QueryParam(name="filter", default="[]", description="Filters")
      *  @FOS\Route("/store/items")
      *  
      *  @param ParamFetcher $paramFetcher
      */
     public function getItemsAction(ParamFetcher $paramFetcher) {    	
-    	$filters = $this->container->get('serializer')->deserialize($paramFetcher->get('filter'),'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Filter>','json');
-    	$filters = new \Webit\Bundle\ExtJsBundle\Store\FilterCollection($filters);
+    	$filters = $this->container->get('serializer')->deserialize($paramFetcher->get('filter'),'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Filter\Filter>','json');
+    	$filters = new \Webit\Bundle\ExtJsBundle\Store\Filter\FilterCollection($filters);
     	
-    	$sort = $this->container->get('serializer')->deserialize($paramFetcher->get('sort'),'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Sorter>','json');
-    	$sort = new \Webit\Bundle\ExtJsBundle\Store\SorterCollection($sort);
+    	$sort = $this->container->get('serializer')->deserialize($paramFetcher->get('sort'),'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Sorter\Sorter>','json');
+    	$sort = new \Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection($sort);
     	
 			$json = $this->getStore()->getModelList($this->getRequest()->query->all(), $filters, $sort, $paramFetcher->get('page'), $paramFetcher->get('limit'), $paramFetcher->get('start'));
 			$this->container->get('serializer')->setGroups($json->getSerializerGroups());

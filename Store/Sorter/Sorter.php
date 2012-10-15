@@ -1,13 +1,10 @@
 <?php
-namespace Webit\Bundle\ExtJsBundle\Store;
+namespace Webit\Bundle\ExtJsBundle\Store\Sorter;
 
-use Webit\Bundle\ExtJsBundle\Store\SorterInterface;
 use JMS\SerializerBundle\Annotation as JMS;
 
 class Sorter implements SorterInterface {
-	const DIRECTION_ASC = 'ASC';
-	const DIRECTION_DESC = 'DESC';
-	
+
 	/**
    * @var string
    * @JMS\Type("string")
@@ -21,7 +18,7 @@ class Sorter implements SorterInterface {
 	 */
 	protected $direction;
 	
-	public function __construct($property,$direction = self::DIRECTION_ASC) {
+	public function __construct($property,$direction = SorterInterface::DIRECTION_ASC) {
 		$this->property = $property;
 		$this->direction = $direction;
 	}

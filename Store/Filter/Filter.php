@@ -1,7 +1,6 @@
 <?php
-namespace Webit\Bundle\ExtJsBundle\Store;
+namespace Webit\Bundle\ExtJsBundle\Store\Filter;
 
-use Webit\Bundle\ExtJsBundle\Store\FilterInterface;
 use JMS\SerializerBundle\Annotation as JMS;
 
 /**
@@ -9,17 +8,7 @@ use JMS\SerializerBundle\Annotation as JMS;
  * @author dbojdo
  *
  */
-class Filter implements FilterInterface {
-	const COMPARISION_EQUAL = 'eq';
-	const COMPARISION_GREATER_THAN = 'gt';
-	const COMPARISION_LESS_THAN = 'lt';
-	
-	const TYPE_BOOLEAN = 'boolean';
-	const TYPE_STRING = 'string';
-	const TYPE_NUMERIC = 'numeric';
-	const TYPE_DATE = 'date';
-	const TYPE_LIST = 'list';
-	
+class Filter implements FilterInterface {	
 	/**
 	 * @var string
 	 * @JMS\Type("string")
@@ -38,14 +27,14 @@ class Filter implements FilterInterface {
 	 * @var string
 	 * @JMS\Type("string")
 	 */
-	protected $type = self::TYPE_STRING;
+	protected $type = FilterInterface::TYPE_STRING;
 	
 	/**
 	 * 
 	 * @var string
 	 * @JMS\Type("string")
 	 */
-	protected $comparision = self::COMPARISION_EQUAL;
+	protected $comparision = FilterInterface::COMPARISION_EQUAL;
 	
 	/**
 	 * 
