@@ -3,6 +3,8 @@ namespace Webit\Bundle\ExtJsBundle\Store;
 
 interface FilterInterface {
 	public function getProperty();
-	public function getValue();	
+	public function getValue();
+	public function getType();
+	public function getComparision();
 }
 ?>
