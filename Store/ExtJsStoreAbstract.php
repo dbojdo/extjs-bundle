@@ -74,7 +74,7 @@ abstract class ExtJsStoreAbstract implements ExtJsStoreInterface {
 	 * @return ExtJsJsonInterface
 	 */
 	public function getModelList($queryParams, FilterCollectionInterface $filters, SorterCollectionInterface $sorters, $page = null, $limit = null, $offset = null) {
-		
+		throw new \RuntimeException('Model list loading is not supported for this store');
 	}
 	
 	/**
@@ -84,7 +84,7 @@ abstract class ExtJsStoreAbstract implements ExtJsStoreInterface {
 	 * @return ExtJsJsonInterface
 	 */
 	public function loadModel($id, $queryParams) {
-		
+		throw new \RuntimeException('Model loading is not supported for this store');
 	}
 	
 	/**
@@ -93,7 +93,7 @@ abstract class ExtJsStoreAbstract implements ExtJsStoreInterface {
 	 * @return ExtJsJsonInterface
 	 */
 	public function createModels(\Traversable $modelListData) {
-		
+		throw new \RuntimeException('Multi create is not supported for this store');
 	}
 	
 	/**
@@ -102,7 +102,7 @@ abstract class ExtJsStoreAbstract implements ExtJsStoreInterface {
 	 * @return ExtJsJsonInterface
 	 */
 	public function createModel($model) {
-		
+		throw new \RuntimeException('Single create is not supported for this store');
 	}
 	
 	/**
@@ -110,7 +110,7 @@ abstract class ExtJsStoreAbstract implements ExtJsStoreInterface {
 	 * @return ExtJsJsonInterface
 	 */
 	public function updateModels(\Traversable $modelListData) {
-		
+		throw new \RuntimeException('Multi update is not supported for this store');
 	}
 	
 	/**
@@ -119,7 +119,7 @@ abstract class ExtJsStoreAbstract implements ExtJsStoreInterface {
 	 * @return ExtJsJsonInterface
 	 */
 	public function updateModel($model) {
-		
+		throw new \RuntimeException('Single update is not supported for this store');
 	}
 	
 	/**
@@ -128,7 +128,7 @@ abstract class ExtJsStoreAbstract implements ExtJsStoreInterface {
 	 * @return ExtJsJsonInterface
 	 */
 	public function deleteModels(\Traversable $modelListData) {
-		
+		throw new \RuntimeException('Multi delete is not supported for this store');
 	}
 	
 	/**
@@ -137,7 +137,7 @@ abstract class ExtJsStoreAbstract implements ExtJsStoreInterface {
 	 * @return ExtJsJsonInterface
 	 */
 	public function deleteModel($id) {
-		
+		throw new \RuntimeException('Single delete is not supported for this store');
 	}
 }
 ?>
