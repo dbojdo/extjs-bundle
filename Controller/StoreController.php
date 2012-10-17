@@ -75,7 +75,9 @@ class StoreController extends FOSRestController {
      * @FOS\Route("/store/items")
      */
     public function postItemsAction() {
-    	$items = $this->getRequest()->getContent();
+    	$root = $this->getStore()->getOption('writer.root');
+    	$items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent(); 
+    	
     	$arData = $this->container->get('serializer')->deserialize($items,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
     	
     	$json = $this->getStore()->createModels(new ArrayCollection($arData));
@@ -88,7 +90,9 @@ class StoreController extends FOSRestController {
      * @FOS\Route("/store/items")
      */
     public function putItemsAction() {
-    	$items = $this->getRequest()->getContent();
+    	$root = $this->getStore()->getOption('writer.root');
+    	$items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent(); 
+
     	$arData = $this->container->get('serializer')->deserialize($items,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
 
     	$response = $this->getStore()->updateModels(new ArrayCollection($arData));
@@ -105,7 +109,8 @@ class StoreController extends FOSRestController {
      * @param ParamFetcher $paramFetcher
      */
     public function deleteItemsAction(ParamFetcher $paramFetcher) {
-    	$items = $this->getRequest()->getContent();
+    	$root = $this->getStore()->getOption('writer.root');
+    	$items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent(); 
 
     	$arData = $this->container->get('serializer')->deserialize($items,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
     	
