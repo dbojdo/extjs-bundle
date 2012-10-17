@@ -75,8 +75,8 @@ class StoreController extends FOSRestController {
      * @FOS\Route("/store/items")
      */
     public function postItemsAction() {
-    	$arProducts = $this->getRequest()->request->get('data');
-    	$arData = $this->container->get('serializer')->deserialize($arProducts,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
+    	$items = $this->getRequest()->getContent();
+    	$arData = $this->container->get('serializer')->deserialize($items,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
     	
     	$json = $this->getStore()->createModels(new ArrayCollection($arData));
     	$view = View::create($json);
@@ -88,8 +88,8 @@ class StoreController extends FOSRestController {
      * @FOS\Route("/store/items")
      */
     public function putItemsAction() {
-    	$arProducts = $this->getRequest()->request->get('data');
-    	$arData = $this->container->get('serializer')->deserialize($arProducts,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
+    	$items = $this->getRequest()->getContent();
+    	$arData = $this->container->get('serializer')->deserialize($items,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
 
     	$response = $this->getStore()->updateModels(new ArrayCollection($arData));
     	$view = View::create($response);
@@ -105,8 +105,9 @@ class StoreController extends FOSRestController {
      * @param ParamFetcher $paramFetcher
      */
     public function deleteItemsAction(ParamFetcher $paramFetcher) {
-    	$arProducts = $this->getRequest()->request->get('data');
-    	$arData = $this->container->get('serializer')->deserialize($arProducts,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
+    	$items = $this->getRequest()->getContent();
+
+    	$arData = $this->container->get('serializer')->deserialize($items,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
     	
     	$json = $this->getStore()->deleteModel($arData,$this->getRequest()->request->all());
     	
