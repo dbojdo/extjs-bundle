@@ -72,5 +72,10 @@ interface ExtJsStoreInterface {
 	 * @return ExtJsJsonInterface
 	 */
 	public function deleteModel($id);
+	
+	/**
+	 * @return string
+	 */
+	public function getDataClass();
 }
 ?>

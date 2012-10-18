@@ -139,5 +139,9 @@ abstract class ExtJsStoreAbstract implements ExtJsStoreInterface {
 	public function deleteModel($id) {
 		throw new \RuntimeException('Single delete is not supported for this store');
 	}
+	
+	public function getDataClass() {
+		return null;
+	}
 }
 ?>

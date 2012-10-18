@@ -78,7 +78,9 @@ class StoreController extends FOSRestController {
     	$root = $this->getStore()->getOption('writer.root');
     	$items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent(); 
     	
-    	$arData = $this->container->get('serializer')->deserialize($items,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
+    	$dataClass = $this->getStore()->getDataClass();
+    	$desrializeClass = $dataClass ? 'ArrayCollectio<' . $dataClass . '>' : 'ArrayCollection';
+    	$arData = $this->container->get('serializer')->deserialize($items,$desrializeClass,'json');
     	
     	$json = $this->getStore()->createModels(new ArrayCollection($arData));
     	$view = View::create($json);
@@ -93,7 +95,9 @@ class StoreController extends FOSRestController {
     	$root = $this->getStore()->getOption('writer.root');
     	$items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent(); 
 
-    	$arData = $this->container->get('serializer')->deserialize($items,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
+    	$dataClass = $this->getStore()->getDataClass();
+    	$desrializeClass = $dataClass ? 'ArrayCollectio<' . $dataClass . '>' : 'ArrayCollection';
+    	$arData = $this->container->get('serializer')->deserialize($items,$desrializeClass,'json');
 
     	$response = $this->getStore()->updateModels(new ArrayCollection($arData));
     	$view = View::create($response);
@@ -112,7 +116,9 @@ class StoreController extends FOSRestController {
     	$root = $this->getStore()->getOption('writer.root');
     	$items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent(); 
 
-    	$arData = $this->container->get('serializer')->deserialize($items,'ArrayCollection<'.$this->getStore()->getDataClass().'>','json');
+    	$dataClass = $this->getStore()->getDataClass();
+    	$desrializeClass = $dataClass ? 'ArrayCollectio<' . $dataClass . '>' : 'ArrayCollection';
+    	$arData = $this->container->get('serializer')->deserialize($items,$desrializeClass,'json');
     	
     	$json = $this->getStore()->deleteModel($arData,$this->getRequest()->request->all());
     	

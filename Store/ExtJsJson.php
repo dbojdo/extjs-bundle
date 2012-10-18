@@ -33,6 +33,13 @@ class ExtJsJson implements ExtJsJsonInterface {
 	
 	/**
 	 * 
+	 * @var
+	 * @JMS\Groups({"extjsResponse"})
+	 */
+	protected $misc;
+	
+	/**
+	 * 
 	 * @var integer
 	 * @JMS\Type("integer")
 	 * @JMS\Groups({"extjsResponse"})
@@ -76,6 +83,14 @@ class ExtJsJson implements ExtJsJsonInterface {
 	
 	public function getTotal() {
 		return $this->total;
+	}
+	
+	public function setMiscData($miscData) {
+		$this->misc = $miscData;
+	}
+	
+	public function getMiscData() {
+		return $this->miscData;
 	}
 	
 	public function setSerializerGroups(array $groups) {
