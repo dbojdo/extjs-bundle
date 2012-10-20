@@ -79,7 +79,7 @@ class StoreController extends FOSRestController {
     	$items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent(); 
     	
     	$dataClass = $this->getStore()->getDataClass();
-    	$desrializeClass = $dataClass ? 'ArrayCollectio<' . $dataClass . '>' : 'ArrayCollection';
+    	$desrializeClass = $dataClass ? 'ArrayCollection<' . $dataClass . '>' : 'ArrayCollection';
     	$arData = $this->container->get('serializer')->deserialize($items,$desrializeClass,'json');
     	
     	$json = $this->getStore()->createModels(new ArrayCollection($arData));
@@ -96,7 +96,7 @@ class StoreController extends FOSRestController {
     	$items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent(); 
 
     	$dataClass = $this->getStore()->getDataClass();
-    	$desrializeClass = $dataClass ? 'ArrayCollectio<' . $dataClass . '>' : 'ArrayCollection';
+    	$desrializeClass = $dataClass ? 'ArrayCollection<' . $dataClass . '>' : 'ArrayCollection';
     	$arData = $this->container->get('serializer')->deserialize($items,$desrializeClass,'json');
 
     	$response = $this->getStore()->updateModels(new ArrayCollection($arData));
@@ -117,7 +117,7 @@ class StoreController extends FOSRestController {
     	$items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent(); 
 
     	$dataClass = $this->getStore()->getDataClass();
-    	$desrializeClass = $dataClass ? 'ArrayCollectio<' . $dataClass . '>' : 'ArrayCollection';
+    	$desrializeClass = $dataClass ? 'ArrayCollection<' . $dataClass . '>' : 'ArrayCollection';
     	$arData = $this->container->get('serializer')->deserialize($items,$desrializeClass,'json');
     	
     	$json = $this->getStore()->deleteModel($arData,$this->getRequest()->request->all());
