@@ -17,9 +17,9 @@ WebitExt.data.proxy.StoreUrlSelector = function(routingParams, request) {
     }
 
     if(id && operation.action == 'read') {
-    	return Routing.generate('webit_extjs_get_store_item',routingParams);
+    	return Routing.generate('webit_extjs_get_item',routingParams);
     } else {
-    	return Routing.generate('webit_extjs_get_store_items',routingParams);
+    	return Routing.generate('webit_extjs_get_items',routingParams);
     }
 	};
 };
