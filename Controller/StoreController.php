@@ -84,6 +84,7 @@ class StoreController extends FOSRestController {
     	
     	$json = $this->getStore()->createModels(new ArrayCollection($arData));
     	$view = View::create($json);
+    	$this->container->get('serializer')->setGroups($json->getSerializerGroups());
     	
     	return $this->handleView($view);
     } // create
@@ -101,6 +102,7 @@ class StoreController extends FOSRestController {
 
     	$response = $this->getStore()->updateModels(new ArrayCollection($arData));
     	$view = View::create($response);
+    	$this->container->get('serializer')->setGroups($json->getSerializerGroups());
     	
     	return $this->handleView($view);
     } // update
