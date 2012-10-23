@@ -7,5 +7,6 @@ interface ExtJsJsonInterface {
 	public function getSuccess();
 	public function getMessage();
 	public function getTotal();
+	public function getSerializerGroups();
 }
 ?>

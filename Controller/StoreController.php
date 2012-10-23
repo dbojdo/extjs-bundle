@@ -39,10 +39,9 @@ class StoreController extends FOSRestController {
 		 */
 		public function getItemAction(ParamFetcher $paramFetcher) {
 			$json = $this->getStore()->loadModel($paramFetcher->get('id'),$this->getRequest()->query->all());
-			$this->container->get('serializer')->setGroups($json->getSerializerGroups());
 			
 			$view = View::create($json);
-					
+			$view->setSerializerGroups($json->getSerializerGroups());
 			return $this->handleView($view);
 		}
 		
@@ -64,9 +63,9 @@ class StoreController extends FOSRestController {
     	$sort = new \Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection($sort);
     	
 			$json = $this->getStore()->getModelList($this->getRequest()->query->all(), $filters, $sort, $paramFetcher->get('page'), $paramFetcher->get('limit'), $paramFetcher->get('start'));
-			$this->container->get('serializer')->setGroups($json->getSerializerGroups());
 			
     	$view = View::create($json);
+    	$view->setSerializerGroups($json->getSerializerGroups());
     	return $this->handleView($view);
     }
     
@@ -84,7 +83,7 @@ class StoreController extends FOSRestController {
     	
     	$json = $this->getStore()->createModels(new ArrayCollection($arData));
     	$view = View::create($json);
-    	$this->container->get('serializer')->setGroups($json->getSerializerGroups());
+    	$view->setSerializerGroups($json->getSerializerGroups());
     	
     	return $this->handleView($view);
     } // create
@@ -102,7 +101,7 @@ class StoreController extends FOSRestController {
 
     	$response = $this->getStore()->updateModels(new ArrayCollection($arData));
     	$view = View::create($response);
-    	$this->container->get('serializer')->setGroups($json->getSerializerGroups());
+    	$view->setSerializerGroups($json->getSerializerGroups());
     	
     	return $this->handleView($view);
     } // update
@@ -125,6 +124,7 @@ class StoreController extends FOSRestController {
     	$json = $this->getStore()->deleteModel($arData,$this->getRequest()->request->all());
     	
     	$view = View::create($json);
+    	$view->setSerializerGroups($json->getSerializerGroups());
     	
     	return $this->handleView($view);
     } 
