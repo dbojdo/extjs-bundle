@@ -100,7 +100,7 @@ class StoreController extends FOSRestController {
     	$arData = $this->container->get('serializer')->deserialize($items,$desrializeClass,'json');
 
     	$json = $this->getStore()->updateModels(new ArrayCollection($arData));
-    	$view = View::create($response);
+    	$view = View::create($json);
     	$view->setSerializerGroups($json->getSerializerGroups());
     	
     	return $this->handleView($view);
