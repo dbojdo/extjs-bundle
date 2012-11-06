@@ -27,7 +27,6 @@ class QueryBuilderDecorator {
 	 * @param FilterCollection $filterCollection
 	 */
 	public function applyFilters(FilterCollectionInterface $filterCollection) {
-		$qb = $this->qb;
 		foreach($filterCollection as $filter) {
 			$property = $filter->getProperty();
 			$property = $this->getQueryProperty($property);
@@ -43,11 +42,11 @@ class QueryBuilderDecorator {
 				case FilterInterface::TYPE_DATETIME:
 					$this->applyDateFilter($property, $filter);
 				break;
-				case FilterInterface::TYPE_BOOELAN:
+				case FilterInterface::TYPE_BOOLEAN:
 					$this->applyStringFilter($property, $filter);
 				break;
 				case FilterInterface::TYPE_LIST:
-					$this->applyStringFilter($property, $filter);
+					$this->applyListFilter($property, $filter);
 				break;
 			}
 		}
@@ -56,7 +55,6 @@ class QueryBuilderDecorator {
 	}
 	
 	protected function applyDateFilter($property, FilterInterface $filter) {
-		
 		$qb = $this->qb;
 		$paramName = 'date_' . substr(md5(serialize($filter) . microtime()),0,10);
 		$value = new \DateTime($filter->getValue());
@@ -110,10 +108,12 @@ class QueryBuilderDecorator {
 		$qb = $this->qb;
 		$value = (string)$filter->getValue();
 		$qb->andWhere($qb->expr()->eq($property,':'.$paramName));
-		$qb->setParameter($paramName,$value,'string');
+		$qb->setParameter($paramName,$value,\Doctrine\DBAL\Types\Type::STRING);
 	}
 	
 	protected function applyNumericFilter($property, FilterInterface $filter) {
+		$qb = $this->qb;
+		
 		$paramName = 'number_' . substr(md5(serialize($filter) . microtime()),0,10);
 		
 		$value = $filter->getValue();
@@ -134,7 +134,7 @@ class QueryBuilderDecorator {
 				//FilterInterface::COMPARISION_EQUAL:
 				$qb->andWhere($qb->expr()->eq($property,':' . $paramName));
 		}
-		$qb->setParameter($paramName,$value,'number');
+		$qb->setParameter($paramName,$value,\Doctrine\DBAL\Types\Type::FLOAT);
 	}
 	
 	protected function applyBooleanFilter($property, FilterInterface $filter) {
@@ -142,11 +142,15 @@ class QueryBuilderDecorator {
 		$paramName = 'number_' . substr(md5(serialize($filter) . microtime()),0,10);
 		
 		$qb->andWhere($qb->expr()->eq($property,':' . $paramName));
-		$qb->setParameter($paramName,$value,'boolean');
+		$qb->setParameter($paramName,$value,\Doctrine\DBAL\Types\Type::BOOLEAN);
 	}
 	
 	protected function applyListFilter($property, FilterInterface $filter) {
-		
+		$arValue = explode(',',$filter->getValue());
+		$paramName = 'list_' . substr(md5(serialize($filter) . microtime()),0,10);
+		$qb = $this->qb;
+		$qb->andWhere($qb->expr()->in($property,':'. $paramName));
+		$qb->setParameter($paramName,$arValue);
 	}
 	
 	/**
