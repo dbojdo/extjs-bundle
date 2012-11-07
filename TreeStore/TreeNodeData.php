@@ -162,7 +162,7 @@ class TreeNodeData {
 	public $children;
 	
 	public function __construct() {
-		$this->chidren = new ArrayCollection();
+		$this->children = new ArrayCollection();
 	}
 }
 ?>
