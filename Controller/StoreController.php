@@ -51,6 +51,8 @@ class StoreController extends FOSRestController {
      *  @FOS\QueryParam(name="start", requirements="\d+", default="0", description="Start")
      *  @FOS\QueryParam(name="sort", default="[]", description="Sort")
      *  @FOS\QueryParam(name="filter", default="[]", description="Filters")
+     *  @FOS\QueryParam(name="query", default="", description="Searching")
+     *  @FOS\QueryParam(name="fields", default="[]", description="Searching fields")
      *  @FOS\Route("/store/items")
      *  
      *  @param ParamFetcher $paramFetcher
