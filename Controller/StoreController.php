@@ -47,7 +47,7 @@ class StoreController extends FOSRestController {
 		
     /**
      *  @FOS\QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
-     *  @FOS\QueryParam(name="limit", requirements="\d+", default="25", description="Limit")
+     *  @FOS\QueryParam(name="limit", requirements="\d+", default="0", description="Limit")
      *  @FOS\QueryParam(name="start", requirements="\d+", default="0", description="Start")
      *  @FOS\QueryParam(name="sort", default="[]", description="Sort")
      *  @FOS\QueryParam(name="filter", default="[]", description="Filters")
@@ -131,7 +131,7 @@ class StoreController extends FOSRestController {
     
     /**
      *  @FOS\QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
-     *  @FOS\QueryParam(name="limit", requirements="\d+", default="25", description="Limit")
+     *  @FOS\QueryParam(name="limit", requirements="\d+", default="0", description="Limit")
      *  @FOS\QueryParam(name="start", requirements="\d+", default="0", description="Start")
      *  @FOS\QueryParam(name="sort", default="[]", description="Sort")
      *  @FOS\QueryParam(name="filter", default="[]", description="Filters")

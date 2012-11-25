@@ -198,7 +198,7 @@ class QueryBuilderDecorator {
 	 * @param integer $limit
 	 */
 	public function applyLimit($limit) {
-		if($limit > 0) {
+		if((int)$limit > 0) {
 			$this->qb->setMaxResults($limit);
 		}
 		
@@ -210,7 +210,7 @@ class QueryBuilderDecorator {
 	 * @param integer $offset
 	 */
 	public function applyOffset($offset) {
-		if($offset > 0) {
+		if((int)$offset > 0) {
 			$this->qb->setFirstResult($offset);
 		}
 		
