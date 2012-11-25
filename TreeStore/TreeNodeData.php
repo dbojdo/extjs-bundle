@@ -164,5 +164,19 @@ class TreeNodeData {
 	public function __construct() {
 		$this->children = new ArrayCollection();
 	}
+
+	public function fromArray($arNode) {
+		foreach($arNode as $key=>$value) {
+			if($key == 'children') {
+				foreach($arNode['children'] as $arChild) {
+					$child = new self();
+					$child->fromArray($arChild);
+					$this->children->add($child);
+				}
+			} else {
+				$this->{$key} = $value;
+			}
+		}
+	}
 }
 ?>

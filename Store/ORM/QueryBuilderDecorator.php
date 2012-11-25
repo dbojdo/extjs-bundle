@@ -170,6 +170,24 @@ class QueryBuilderDecorator {
 		return $this;
 	}
 	
+	public function applySearching($query,array $fields) {
+		$qb = $this->qb;
+		$arCond = array();
+		foreach($fields as $field) {
+			$field = $this->qb->getRootAlias() . '.'.$this->underscoreToCamelCase($field);
+			// FIXME: tylko po polach typu string
+			// FIXME: możliwość ustalenia like %saf% lub %dfssa lub dsfd%
+			// FIXME: możliwość ustalenia dodatkowych filtrów (lowercase, usuwanie białych znaków, przecinków itd)
+			$arCond[] = $qb->expr()->like($field,$qb->expr()->literal($query.'%'));
+		}
+		
+		if(count($arCond) > 0) {
+			$this->qb->andWhere(call_user_func_array(array($qb->expr(),'orx'), $arCond));
+		}
+	
+		return $this;
+	}
+	
 	private function getQueryProperty($property) {
 		$property = $this->underscoreToCamelCase($property);
 		if($this->qb->getRootAlias()) {
