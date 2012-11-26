@@ -48,11 +48,11 @@ class Line extends Series {
 	/**
 	 * 
 	 * @var unknown_type
-	 * @JMS\Type("array")
+	 * 
 	 * @JMS\SerializedName("style")
 	 * @JMS\Groups({"chartInfo"})
 	 */
-	protected $style;
+	protected $style = array();
 	
 	public function __construct() {
 //		parent::__construct();
