@@ -60,6 +60,13 @@ class Series {
 	 */
 	protected $yField;
 	
+	/**
+	 * @JMS\Type("string")
+	 * @JMS\SerializedName("axis")
+	 * @JMS\Groups({"chartInfo"})
+	 */
+	protected $axis;
+	
 	public function getHighlight(){
 		return $this->highlight;
 	}
@@ -122,6 +129,14 @@ class Series {
 	
 	public function getYField() {
 		return $this->yField;
+	}
+	
+	public function setAxis($axis) {
+		$this->axis = $axis;
+	}
+	
+	public function getAxis() {
+		return $this->axis;
 	}
 }
 ?>
