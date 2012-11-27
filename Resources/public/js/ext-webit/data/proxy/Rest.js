@@ -1,4 +1,4 @@
-Ext.define('WebitExt.data.proxy.Rest', {
+Ext.define('Webit.data.proxy.Rest', {
     extend: 'Ext.data.proxy.Rest',
     alias : 'proxy.webitrest',
 

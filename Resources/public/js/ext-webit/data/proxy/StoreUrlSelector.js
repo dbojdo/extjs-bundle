@@ -1,4 +1,4 @@
-Ext.ns('WebitExt.data.proxy');
+Ext.ns('Webit.data.proxy');
 WebitExt.data.proxy.StoreUrlSelector = function(routingParams, request) {
 	return function(request) {
 		var operation = request.operation,

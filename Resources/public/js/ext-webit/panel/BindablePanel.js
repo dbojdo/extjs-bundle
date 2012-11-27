@@ -1,4 +1,4 @@
-Ext.define('WebitExt.panel.BindablePanel',{
+Ext.define('Webit.panel.BindablePanel',{
 	extend: 'Ext.panel.Panel',
 	initComponent: function() {
 		this.addEvents('bind');
