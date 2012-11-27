@@ -140,9 +140,15 @@ Ext.define('Webit.grid.editable.Controller',{
 			return false;
 		}
 		
-		if(sel[0].phantom == true) {
-			grid.getStore().remove(sel[0]);
+		var performRemove = function(r) {
+			grid.getStore().suspendAutoSync();
+			grid.getStore().remove(r);
 			grid.getStore().commitChanges();
+			grid.getStore().resumeAutoSync();
+		};
+		
+		if(sel[0].phantom == true) {
+			performRemove(sel[0]);
 			
 			return true;
 		}
@@ -152,10 +158,7 @@ Ext.define('Webit.grid.editable.Controller',{
 				sel[0].destroy({
 					callback: function(r, response) {
 						if(response.success) {
-							grid.getStore().suspendAutoSync();
-							grid.getStore().remove(sel[0]);
-							grid.getStore().commitChanges();
-							grid.getStore().resumeAutoSync();
+							performRemove(sel[0]);
 						} else {
 							Ext.Msg.alert('Usuwanie elementu','Wystąpił błąd podczasu próby usunięcia elementu.');
 						}
