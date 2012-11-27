@@ -14,7 +14,7 @@ Ext.define('Webit.grid.editable.Grid',{
 	newWindowConfig: null,
 	rowEditing: {
   	clicksToMoveEditor: 2,
-  	id: 'rowEditing',
+  	pluginId: 'rowEditing',
   	errorSummary: false,
   	autoCancel: true,
   	saveBtnText: 'Zapisz',
