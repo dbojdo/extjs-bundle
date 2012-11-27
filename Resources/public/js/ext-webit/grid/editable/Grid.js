@@ -63,7 +63,7 @@ Ext.define('Webit.grid.editable.Grid',{
 		
 		this.callParent();
 		
-		for(key in this.buttonVisibility) {
+		for(key in this.buttonsVisibility) {
 			this.down('toolbar button[itemId="'+key+'"]').setVisible(this.buttonVisibility[key]);
 		}
 	}
