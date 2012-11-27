@@ -140,6 +140,13 @@ Ext.define('Webit.grid.editable.Controller',{
 			return false;
 		}
 		
+		if(sel[0].phantom == true) {
+			grid.getStore().remove(sel[0]);
+			grid.getStore().commitChanges();
+			
+			return true;
+		}
+		
 		Ext.Msg.confirm(btn.confirmTitle,btn.confirmMsg,function(btnId) {
 			if(btnId == 'yes') {
 				sel[0].destroy({
