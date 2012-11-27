@@ -2,8 +2,8 @@ Ext.define('Webit.grid.editable.Controller',{
 	extend: 'Ext.app.Controller',
 	init : function() {
 		this.control({
-			'webit_grid_editable_grid': {
-				selectionchange: this.onGridSelectionChange
+			'webit_grid_editable_grid' : {
+				selectionchange: this.onGridSelectionchange
 			},
 			'webit_grid_editable_grid[editmode="window"] button[itemId="add"]': {
 				click: this.onWindowAdd
@@ -25,7 +25,7 @@ Ext.define('Webit.grid.editable.Controller',{
 			}
 		});
 	},
-	onGridSelectionChange: function(sm, selection) {
+	onGridSelectionchange : function(sm, selected) {
 		var editBtn = sm.view.ownerCt.down('button[itemId="edit"]');
 		var delBtn = sm.view.ownerCt.down('button[itemId="del"]');
 		
