@@ -32,9 +32,11 @@ Ext.define('Webit.grid.editable.Grid',{
 		},{
 			text: 'e',
 			itemId: 'edit',
-			tooltip: 'Edytuj'
+			tooltip: 'Edytuj',
+			disabled: true
 		},{
-			xtype: 'webit_grid_editable_buttondelete'
+			xtype: 'webit_grid_editable_buttondelete',
+			disabled: true
 		}]
 	}],
 	getModelDefaults: function() {

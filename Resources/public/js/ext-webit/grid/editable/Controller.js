@@ -2,6 +2,9 @@ Ext.define('Webit.grid.editable.Controller',{
 	extend: 'Ext.app.Controller',
 	init : function() {
 		this.control({
+			'webit_grid_editable_grid': {
+				selectionchange: this.onGridSelectionChange
+			},
 			'webit_grid_editable_grid[editmode="window"] button[itemId="add"]': {
 				click: this.onWindowAdd
 			},
@@ -21,6 +24,18 @@ Ext.define('Webit.grid.editable.Controller',{
 				click: this.onWindowSave
 			}
 		});
+	},
+	onGridSelectionChange: function(sm, selection) {
+		var editBtn = sm.view.ownerCt.down('button[itemId="edit"]');
+		var delBtn = sm.view.ownerCt.down('button[itemId="del"]');
+		
+		if(editBtn) {
+			editBtn.setDisabled(selected.length != 1);
+		}
+		
+		if(delBtn) {
+			delBtn.setDisabled(selected.length != 1);
+		}
 	},
 	onWindowSave: function(btn) {
 		var win = btn.up('window');
