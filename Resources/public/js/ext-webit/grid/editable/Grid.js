@@ -20,6 +20,8 @@ Ext.define('Webit.grid.editable.Grid',{
   	saveBtnText: 'Zapisz',
   	cancelBtnText: 'Anuluj'
 	},
+	buttonsVisibility: {
+	},
 	dockedItems: [{
 		xtype: 'toolbar',
 		dock: 'right',
@@ -60,6 +62,9 @@ Ext.define('Webit.grid.editable.Grid',{
 		});
 		
 		this.callParent();
-		console.info('xx');
+		
+		for(key in this.buttonVisibility) {
+			this.down('toolbar button[itemId="'+key+'"]').setVisible(this.buttonVisibility[key]);
+		}
 	}
 });
