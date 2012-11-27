@@ -90,7 +90,7 @@ Ext.define('Webit.grid.editable.Controller',{
 				win.getEl().unmask();
 				Ext.each(win.down('form').query('combo'),function(combo) {
 					if(r.fields.containsKey(combo.getItemId())) {
-						combo.getStore().insert(0,record.get(combo.getItemId()));	
+						combo.getStore().insert(0,r.get(combo.getItemId()));	
 					}
 				});
 					
