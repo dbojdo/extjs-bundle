@@ -398,25 +398,34 @@ Ext.define('Ext.ux.grid.feature.Searching', {
 		if('radio' === this.menuStyle) {
 			group = 'g' + (new Date).getTime();	
 		}
-		
-		Ext.each(columns, function(column) {
-			var disable = false;
-			if(column.text && column.dataIndex && column.dataIndex != '') {
-				Ext.each(this.disableIndexes, function(item) {
-					disable = disable ? disable : item === column.dataIndex;
-				});
-				if(!disable) {
-					menu.add({
-						xtype: 'menucheckitem',
-						text: column.text,
-						hideOnClick: false,
-						group:group,
-						checked: 'all' === this.checkIndexes,
-						dataIndex: column.dataIndex
+		var me = this;
+		var fetchColumns = function(columns) {
+			Ext.each(columns, function(column) {
+				var disable = false;
+				if(column.text && column.dataIndex && column.dataIndex != '') {
+					Ext.each(me.disableIndexes, function(item) {
+						disable = disable ? disable : item === column.dataIndex;
 					});
+					if(!disable) {
+						menu.add({
+							xtype: 'menucheckitem',
+							text: column.text,
+							hideOnClick: false,
+							group:group,
+							checked: 'all' === me.checkIndexes,
+							dataIndex: column.dataIndex
+						});
+					}
 				}
-			}
-		}, this);
+				
+				if(column.items && Ext.isArray(column.items.items)) {
+					fetchColumns(column.items.items);
+				}
+			}, this);
+		};
+		
+		fetchColumns(columns);
+		
 		// }}}
 		// {{{
 		// check items
@@ -447,7 +456,6 @@ Ext.define('Ext.ux.grid.feature.Searching', {
 
 	} // eo function reconfigure
 	// }}}
-
 }); // eo extend
 
 // eof
