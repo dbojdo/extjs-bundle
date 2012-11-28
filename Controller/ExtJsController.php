@@ -1,5 +1,13 @@
 <?php
+use Symfony\Component\Security\Core\SecurityContext;
+
 namespace Webit\Bundle\ExtJsBundle\Controller;
+
+use Symfony\Component\Security\Core\Role\Role;
+
+use FOS\UserBundle\Entity\UserManager;
+
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -65,6 +73,37 @@ class ExtJsController
 		
 		$view->setTemplate('WebitExtJsBundle::stylesheets.html.twig');
 	
+		return $this->viewHandler->handle($view);
+	}
+	
+	public function getSecurityContextAction() {
+		$user = null;
+		if($this->container->get('security.context')->getToken()) {
+			$user = $this->container->get('security.context')->getToken()->getUser();
+			$user = clone($user);	
+		}
+		
+		$rh = $this->container->get('security.role_hierarchy');
+		$arRoles = $user->getRoles();
+		foreach($arRoles as &$role) {
+			$role = new Role($role);
+		}
+		$arRoles = $rh->getReachableRoles($arRoles);
+		foreach($arRoles as &$role) {
+			$role = $role->getRole();
+		}
+		$user->setRoles($arRoles);
+		
+		$serializer = $this->container->get('serializer');
+		$serializer->setGroups(array('userBaseInfo','userRolesInfo'));
+		
+		$view = new View();
+		$view->setTemplate('WebitExtJsBundle::securitycontext.js.twig');
+		$arSecurityConfig = $this->container->getParameter('webit_ext_js.security');
+		$view->setData(array('user'=>$serializer->serialize($user,'json'),'model'=>$arSecurityConfig['model']));
+		$view->setHeader('Content-Type', 'application/javascript');
+		
+
 		return $this->viewHandler->handle($view);
 	}
 }

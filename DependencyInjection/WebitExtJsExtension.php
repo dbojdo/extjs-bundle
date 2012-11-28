@@ -24,11 +24,12 @@ class WebitExtJsExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-        
+
         $alias = $this->getAlias();
         foreach ($config as $key => $value) {
         	$container->setParameter($alias . '.' . $key, $value);
         }
+
     }
 }
 ?>

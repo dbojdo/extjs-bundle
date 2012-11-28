@@ -1,3 +1,7 @@
+webit_extjs_security_context:
+    pattern:   /get-security-context
+    defaults:  { _controller: webit_ext_js.controller.extjs:getSecurityContextAction, _format: javascript  }
+
 WebitExtJsBundle_store:
     type: rest
     resource: webit_ext_js.controller_store
