@@ -8,6 +8,14 @@ Ext.define('Webit.grid.editable.EditWindow',{
 		frame: true,
 		border: false
 	},
+	listeners: {
+		maximize: function(win) {
+			win.center();
+		},
+		restore: function(win) {
+			win.doLayout();
+		}
+	},
 	grid: null,
 	model: null,
 	bbar: ['->',{
@@ -22,6 +30,12 @@ Ext.define('Webit.grid.editable.EditWindow',{
 	}],
 	initComponent: function() {
 		this.addEvents('recordSave');
+		if(this.grid && Ext.isEmpty(this.renderTo)) {
+			Ext.apply(this,{
+				renderTo: this.grid.getEl()
+			});
+		}
+		
 		this.callParent();
 	},
 	getModel: function() {
