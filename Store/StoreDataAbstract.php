@@ -1,7 +1,7 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Store;
-use JMS\SerializerBundle\Annotation\Exclude;
-use JMS\SerializerBundle\Annotation\PostDeserialize;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\PostDeserialize;
 
 abstract class StoreDataAbstract {
 	/**

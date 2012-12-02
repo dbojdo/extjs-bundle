@@ -1,6 +1,6 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Chart\Series;
-use JMS\SerializerBundle\Annotation as JMS;
+use JMS\Serializer\Annotation as JMS;
 class Series {
 	/**
 	 * 
