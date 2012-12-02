@@ -1,17 +1,11 @@
 <?php
-use Symfony\Component\Security\Core\SecurityContext;
-
 namespace Webit\Bundle\ExtJsBundle\Controller;
 
-use Symfony\Component\Security\Core\Role\Role;
-
 use FOS\UserBundle\Entity\UserManager;
-
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use FOS\RestBundle\View\ViewHandlerInterface, FOS\RestBundle\View\View;
+use Symfony\Component\Locale\Locale;
 
 class ExtJsController 
 {

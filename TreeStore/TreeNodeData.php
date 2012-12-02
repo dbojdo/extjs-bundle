@@ -1,7 +1,7 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\TreeStore;
 
-use JMS\SerializerBundle\Annotation\Type;
+use JMS\Serializer\Annotation\Type;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class TreeNodeData {	
