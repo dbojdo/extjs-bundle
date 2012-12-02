@@ -34,7 +34,7 @@ class TreeStoreController extends FOSRestController {
 			$json = $this->getStore()->loadNode($paramFetcher->get('id'));
 
 			$view = View::create($json);
-			$view->setSerializerGroups($json->getSerializerGroups());
+			$this->container->get('serializer')->setGroups($json->getSerializerGroups());
 			
 			return $this->handleView($view);
 		}
