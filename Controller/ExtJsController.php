@@ -2,7 +2,7 @@
 namespace Webit\Bundle\ExtJsBundle\Controller;
 
 use FOS\UserBundle\Entity\UserManager;
-use Symfony\Component\Security\Core\Role\RoleHierarchy;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface, FOS\RestBundle\View\View;
 use Symfony\Component\Locale\Locale;
