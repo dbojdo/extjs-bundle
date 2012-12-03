@@ -1,6 +1,6 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Chart\Axis;
-use JMS\SerializerBundle\Annotation as JMS;
+use JMS\Serializer\Annotation as JMS;
 class Category extends Axis {	
 	public function __construct() {
 		//parent::__construct();

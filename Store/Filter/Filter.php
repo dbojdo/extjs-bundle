@@ -1,7 +1,7 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Store\Filter;
 
-use JMS\SerializerBundle\Annotation as JMS;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * 

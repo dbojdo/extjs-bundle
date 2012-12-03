@@ -25,6 +25,7 @@ Ext.define('Webit.grid.editable.Grid',{
 	dockedItems: [{
 		xtype: 'toolbar',
 		dock: 'right',
+		itemId: 'edit',
 		items: [{
 			text: '+',
 			itemId: 'add',

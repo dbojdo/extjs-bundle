@@ -1,6 +1,6 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\ExtJs\Request;
-use JMS\SerializerBundle\Annotation\Type;
+use JMS\Serializer\Annotation\Type;
 
 class SortInfo {
 	/**

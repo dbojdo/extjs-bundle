@@ -3,7 +3,7 @@ namespace Webit\Bundle\ExtJsBundle\Chart;
 
 use Webit\Bundle\ExtJsBundle\Chart\Axis\Axis;
 use Webit\Bundle\ExtJsBundle\Chart\Series\Series;
-use JMS\SerializerBundle\Annotation as JMS;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * 

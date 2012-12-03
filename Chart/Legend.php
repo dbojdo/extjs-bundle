@@ -1,6 +1,6 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Chart;
-use JMS\SerializerBundle\Annotation as JMS;
+use JMS\Serializer\Annotation as JMS;
 class Legend {
 	const POSITION_BOTTOM = 'bottom';
 	const POSITION_TOP = 'top';
