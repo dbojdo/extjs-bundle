@@ -130,6 +130,9 @@ class QueryBuilderDecorator {
 			case FilterInterface::COMPARISION_GREATER_OR_EQUAL:
 				$qb->andWhere($qb->expr()->gte($property,':' . $paramName));
 				break;
+			case FilterInterface::COMPARISION_NOT:
+					$qb->andWhere($qb->expr()->neq($property,':' . $paramName));
+					break;
 			default:
 				//FilterInterface::COMPARISION_EQUAL:
 				$qb->andWhere($qb->expr()->eq($property,':' . $paramName));

@@ -2,6 +2,7 @@
 namespace Webit\Bundle\ExtJsBundle\Store\Filter;
 
 interface FilterInterface {
+	const COMPARISION_NOT = 'not';
 	const COMPARISION_EQUAL = 'eq';
 	const COMPARISION_GREATER = 'gt';
 	const COMPARISION_LESS = 'lt';
