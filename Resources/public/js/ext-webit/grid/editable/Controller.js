@@ -62,6 +62,12 @@ Ext.define('Webit.grid.editable.Controller',{
 						win.grid.getStore().resumeAutoSync();
 						win.grid.getSelectionModel().deselectAll();
 						win.grid.getSelectionModel().select(sel[0]);
+					} else {
+						win.grid.getStore().suspendAutoSync();
+						win.grid.getStore().addSorted(record);
+							win.grid.getStore().commitChanges();
+						win.grid.getStore().resumeAutoSync();
+						win.grid.getSelectionModel().deselectAll();
 					}
 					
 					win.fireEvent('recordSave',r,phantom);
