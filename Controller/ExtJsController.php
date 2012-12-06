@@ -73,20 +73,23 @@ class ExtJsController
 	public function getSecurityContextAction() {
 		$user = null;
 		if($this->container->get('security.context')->getToken()) {
-			$user = $this->container->get('security.context')->getToken()->getUser();
-			$user = clone($user);	
+			$user = $this->container->get('security.context')->getToken()->getUser();	
 		}
 		
-		$rh = $this->container->get('security.role_hierarchy');
-		$arRoles = $user->getRoles();
-		foreach($arRoles as &$role) {
-			$role = new Role($role);
+		if($user) {
+			$user = clone($user);
+		
+			$rh = $this->container->get('security.role_hierarchy');
+			$arRoles = $user->getRoles();
+			foreach($arRoles as &$role) {
+				$role = new Role($role);
+			}
+			$arRoles = $rh->getReachableRoles($arRoles);
+			foreach($arRoles as &$role) {
+				$role = $role->getRole();
+			}
+			$user->setRoles($arRoles);
 		}
-		$arRoles = $rh->getReachableRoles($arRoles);
-		foreach($arRoles as &$role) {
-			$role = $role->getRole();
-		}
-		$user->setRoles($arRoles);
 		
 		$serializer = $this->container->get('serializer');
 		$serializer->setGroups(array('userBaseInfo','userRolesInfo'));
