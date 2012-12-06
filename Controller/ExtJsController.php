@@ -73,7 +73,8 @@ class ExtJsController
 	public function getSecurityContextAction() {
 		$user = null;
 		if($this->container->get('security.context')->getToken()) {
-			$user = $this->container->get('security.context')->getToken()->getUser();	
+			$user = $this->container->get('security.context')->getToken()->getUser();
+			$user = $user != 'anon.' ?: null;	
 		}
 		
 		if($user) {
