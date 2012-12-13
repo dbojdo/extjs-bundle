@@ -126,7 +126,7 @@ class QueryBuilderDecorator {
 		$value = (float)$filter->getValue();
 		$arCond = array();
 		foreach($property as $f) {
-			$arCond[] = $qb->expr()->eq($property,$this->expr()->literal($value));
+			$arCond[] = $qb->expr()->eq($property,$qb->expr()->literal($value));
 			switch($filter->getComparision()) {
 				case FilterInterface::COMPARISION_GREATER:
 					$arCond[] = $qb->expr()->gt($property,$value);
