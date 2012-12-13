@@ -14,12 +14,15 @@ class QueryBuilderDecorator {
 	 */
 	protected $qb;
 	
+	protected $propertyMap;
+	
 	/**
 	 * 
 	 * @param QueryBuilder $qb
 	 */
-	public function __construct(QueryBuilder $qb) {
+	public function __construct(QueryBuilder $qb, $propertyMap = array()) {
 		$this->qb = $qb;
+		$this->propertyMap = $propertyMap;
 	}
 	
 	/**
@@ -30,7 +33,6 @@ class QueryBuilderDecorator {
 		foreach($filterCollection as $filter) {
 			$property = $filter->getProperty();
 			$property = $this->getQueryProperty($property);
-			
 			switch($filter->getType()) {
 				case FilterInterface::TYPE_STRING:
 					$this->applyStringFilter($property, $filter);
@@ -43,7 +45,7 @@ class QueryBuilderDecorator {
 					$this->applyDateFilter($property, $filter);
 				break;
 				case FilterInterface::TYPE_BOOLEAN:
-					$this->applyStringFilter($property, $filter);
+					$this->applyBooleanFilter($property, $filter);
 				break;
 				case FilterInterface::TYPE_LIST:
 					$this->applyListFilter($property, $filter);
@@ -56,6 +58,8 @@ class QueryBuilderDecorator {
 	
 	protected function applyDateFilter($property, FilterInterface $filter) {
 		$qb = $this->qb;
+		$property = array_shift($property);
+		
 		$paramName = 'date_' . substr(md5(serialize($filter) . microtime()),0,10);
 		$value = new \DateTime($filter->getValue());
 		if($filter->getType() == FilterInterface::TYPE_DATE) {
@@ -104,56 +108,75 @@ class QueryBuilderDecorator {
 	}
 	
 	protected function applyStringFilter($property, FilterInterface $filter) {
-		$paramName = 'string_' . substr(md5(serialize($filter) . microtime()),0,10);
 		$qb = $this->qb;
 		$value = (string)$filter->getValue();
-		$qb->andWhere($qb->expr()->eq($property,':'.$paramName));
-		$qb->setParameter($paramName,$value,\Doctrine\DBAL\Types\Type::STRING);
+		
+		$arCond = array();
+		foreach($property as $f) {
+			$arCond[] = $qb->expr()->like($f,$qb->expr()->literal($value));
+		}
+		
+		if(count($arCond) > 0) {
+			$this->qb->andWhere(call_user_func_array(array($qb->expr(),'orx'), $arCond));
+		}
 	}
 	
 	protected function applyNumericFilter($property, FilterInterface $filter) {
 		$qb = $this->qb;
-		
-		$paramName = 'number_' . substr(md5(serialize($filter) . microtime()),0,10);
-		
-		$value = $filter->getValue();
-		switch($filter->getComparision()) {
-			case FilterInterface::COMPARISION_GREATER:
-				$qb->andWhere($qb->expr()->gt($property,':' . $paramName));
-				break;
-			case FilterInterface::COMPARISION_LESS:
-				$qb->andWhere($qb->expr()->lt($property,':' . $paramName));
-				break;
-			case FilterInterface::COMPARISION_LESS_OR_EQUAL:
-				$qb->andWhere($qb->expr()->lte($property,':' . $paramName));
-				break;
-			case FilterInterface::COMPARISION_GREATER_OR_EQUAL:
-				$qb->andWhere($qb->expr()->gte($property,':' . $paramName));
-				break;
-			case FilterInterface::COMPARISION_NOT:
-					$qb->andWhere($qb->expr()->neq($property,':' . $paramName));
+		$value = (float)$filter->getValue();
+		$arCond = array();
+		foreach($property as $f) {
+			$arCond[] = $qb->expr()->eq($property,$this->expr()->literal($value));
+			switch($filter->getComparision()) {
+				case FilterInterface::COMPARISION_GREATER:
+					$arCond[] = $qb->expr()->gt($property,$value);
 					break;
-			default:
-				//FilterInterface::COMPARISION_EQUAL:
-				$qb->andWhere($qb->expr()->eq($property,':' . $paramName));
+				case FilterInterface::COMPARISION_LESS:
+					$arCond[] = $qb->expr()->lt($property,$value);
+					break;
+				case FilterInterface::COMPARISION_LESS_OR_EQUAL:
+					$arCond[] = $qb->expr()->lte($property,$value);
+					break;
+				case FilterInterface::COMPARISION_GREATER_OR_EQUAL:
+					$arCond[] = $qb->expr()->gte($property,$value);
+					break;
+				case FilterInterface::COMPARISION_NOT:
+					$arCond[] = $qb->expr()->neq($property,$value);
+					break;
+				default:
+					//FilterInterface::COMPARISION_EQUAL:
+					$arCond[] = $qb->expr()->eq($property,$value);
+			}
 		}
-		$qb->setParameter($paramName,$value,\Doctrine\DBAL\Types\Type::FLOAT);
+	
+		if(count($arCond) > 0) {
+			$this->qb->andWhere(call_user_func_array(array($qb->expr(),'orx'), $arCond));
+		}
 	}
 	
 	protected function applyBooleanFilter($property, FilterInterface $filter) {
+		$qb = $this->qb;
 		$value = (boolean)$filter->getValue();
-		$paramName = 'number_' . substr(md5(serialize($filter) . microtime()),0,10);
-		
-		$qb->andWhere($qb->expr()->eq($property,':' . $paramName));
-		$qb->setParameter($paramName,$value,\Doctrine\DBAL\Types\Type::BOOLEAN);
+		$arCond = array();
+		foreach($property as $f) {
+			$arCond[] = $qb->expr()->eq($f,$qb->expr()->literal($value));
+		}
+	
+		if(count($arCond) > 0) {
+			$this->qb->andWhere(call_user_func_array(array($qb->expr(),'orx'), $arCond));
+		}
 	}
 	
 	protected function applyListFilter($property, FilterInterface $filter) {
-		$arValue = explode(',',$filter->getValue());
-		$paramName = 'list_' . substr(md5(serialize($filter) . microtime()),0,10);
 		$qb = $this->qb;
-		$qb->andWhere($qb->expr()->in($property,':'. $paramName));
-		$qb->setParameter($paramName,$arValue);
+		$arValue = explode(',',$filter->getValue());
+		
+		$arCond = array();
+		foreach($property as $f) {
+			$arCond[] = $qb->expr()->in($property,$arValue);
+		}
+		
+		$qb->andWhere($qb->expr()->orx($arCond));
 	}
 	
 	/**
@@ -162,12 +185,10 @@ class QueryBuilderDecorator {
 	 */
 	public function applySorters(SorterCollectionInterface $sorterCollection) {
 		foreach($sorterCollection as $sorter) {
-			$property = $sorter->getProperty();
-			$property = $this->getQueryProperty($property);
-
-			$direction = $sorter->getDirection();
-			
-			$this->qb->addOrderBy($property,$direction);
+			$arFields = $this->getQueryProperty($sorter->getProperty());
+			foreach($arFields as $f) {
+				$this->qb->addOrderBy($f,$sorter->getDirection());
+			}
 		}
 		
 		return $this;
@@ -177,11 +198,13 @@ class QueryBuilderDecorator {
 		$qb = $this->qb;
 		$arCond = array();
 		foreach($fields as $field) {
-			$field = $this->qb->getRootAlias() . '.'.$this->underscoreToCamelCase($field);
+			$arField = $this->getQueryProperty($field);
 			// FIXME: tylko po polach typu string
 			// FIXME: możliwość ustalenia like %saf% lub %dfssa lub dsfd%
 			// FIXME: możliwość ustalenia dodatkowych filtrów (lowercase, usuwanie białych znaków, przecinków itd)
-			$arCond[] = $qb->expr()->like($field,$qb->expr()->literal($query.'%'));
+			foreach($arField as $f) {
+				$arCond[] = $qb->expr()->like($f,$qb->expr()->literal($query.'%'));
+			}
 		}
 		
 		if(count($arCond) > 0) {
@@ -192,12 +215,30 @@ class QueryBuilderDecorator {
 	}
 	
 	private function getQueryProperty($property) {
-		$property = $this->underscoreToCamelCase($property);
-		if($this->qb->getRootAlias()) {
-			$property = $this->qb->getRootAlias() .'.'.$property;
+		$name = (array)$this->underscoreToCamelCase($property);
+		$alias = $this->qb->getRootAlias();
+
+		if(key_exists($property,$this->propertyMap)) {
+			$arProperty = $this->propertyMap[$property];
+			$alias = isset($arProperty['alias']) ? $arProperty['alias'] : $alias;
+			$name = isset($arProperty['name']) ? (array)$arProperty['name'] : $name;
 		}
 		
-		return $property;
+		if($alias) {
+			$property = $alias .'.'.$name;
+		}
+		
+		$arProperties = array();
+		foreach($name as $n) {
+			$a = $alias;
+			if(is_array($n)) {
+				$a = key_exists('alias',$n) ? $n['alias'] : $alias;
+				$n = key_exists('name',$n) ? $n['name'] : array_shift($n);
+			}
+			$arProperties[] = $alias ? ($a. '.'.$n) : $n; 
+		}
+		
+		return $arProperties;
 	}
 	
 	private function underscoreToCamelCase($string, $capitalizeFirstCharacter = false) {
@@ -208,10 +249,6 @@ class QueryBuilderDecorator {
 		}
 	
 		return $str;
-	}
-	
-	protected function getEntityClass($property) {
-		
 	}
 	
 	/**

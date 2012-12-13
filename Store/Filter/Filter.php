@@ -16,6 +16,12 @@ class Filter implements FilterInterface {
 	protected $property;
 	
 	/**
+	 * @var string
+	 * @JMS\Type("string")
+	 */
+	protected $alias;
+	
+	/**
 	 * 
 	 * @var string
 	 * @JMS\Type("string")
@@ -43,9 +49,10 @@ class Filter implements FilterInterface {
 	 */
 	protected $value;
 	
-	public function __construct($property,$value) {
+	public function __construct($property,$value,$alias = null) {
 		$this->property = $property;
 		$this->value = $value;
+		$this->alias = $alias;
 	}
 	
 	public function getProperty() {
@@ -53,6 +60,11 @@ class Filter implements FilterInterface {
 		return $property;
 	}
 
+	
+	public function getAlias() {
+		return $this->alias;
+	}
+	
 	public function getValue() {
 		return $this->value;
 	}
@@ -63,5 +75,22 @@ class Filter implements FilterInterface {
 	
 	public function getType() {
 		return $this->type;
+	}
+	
+	/**
+	 * @JMS\PostDeserialize
+	 */
+	public function postDeserialize() {
+		$property = $this->getProperty();
+		$arProperty = explode('.',$property);
+		if(count($arProperty) > 1) {
+			if($this->property) {
+				$this->property = array_pop($arProperty);
+			} else {
+				$this->field = array_pop($arProperty);
+			}
+			
+			$this->alias = array_pop($arProperty);
+		}
 	}
 }

@@ -54,7 +54,8 @@ Ext.define('Webit.grid.editable.Grid',{
 		return this.getEditWindowConfig();
 	},
 	initComponent: function() {
-		
+		this.addEvents('recordSave');
+
 		var plugins = [];
 		if(this.editmode == 'row') {
 			var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', this.rowEditing);

@@ -15,6 +15,7 @@ interface FilterInterface {
 	const TYPE_DATE = 'date';
 	const TYPE_DATETIME = 'datetime';
 	const TYPE_LIST = 'list';
+	const TYPE_PARENT = 'parent';
 	
 	public function getProperty();
 	public function getValue();

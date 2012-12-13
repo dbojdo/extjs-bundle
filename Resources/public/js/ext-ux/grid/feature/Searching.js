@@ -401,6 +401,10 @@ Ext.define('Ext.ux.grid.feature.Searching', {
 		var me = this;
 		var fetchColumns = function(columns) {
 			Ext.each(columns, function(column) {
+				if(column.searchable === false && column.dataIndex != '') {
+					me.disableIndexes.push(column.dataIndex);
+				}
+				
 				var disable = false;
 				if(column.text && column.dataIndex && column.dataIndex != '') {
 					Ext.each(me.disableIndexes, function(item) {

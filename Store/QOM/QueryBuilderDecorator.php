@@ -1,8 +1,12 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Store\QOM;
 
-use Webit\Bundle\ExtJsBundle\Store\SorterCollection;
-use Webit\Bundle\ExtJsBundle\Store\FilterCollection;
+use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
+
+use Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface;
+
+use Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection;
+use Webit\Bundle\ExtJsBundle\Store\Filter\FilterCollection;
 use PHPCR\Util\QOM\QueryBuilder;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 
@@ -20,11 +24,18 @@ class QueryBuilderDecorator {
 	
 	/**
 	 * 
+	 * @var array
+	 */
+	protected $propertyMap;
+	
+	/**
+	 * 
 	 * @param QueryBuilder $qb
 	 */
-	public function __construct(QueryBuilder $qb) {
+	public function __construct(QueryBuilder $qb, array $propertyMap = array()) {
 		$this->qb = $qb;
 		$this->qf = $qb->getQOMFactory();
+		$this->propertyMap = $propertyMap;
 	}
 	
 	/**
@@ -33,10 +44,70 @@ class QueryBuilderDecorator {
 	 */
 	public function applyFilters(FilterCollection $filterCollection) {
 		foreach($filterCollection as $filter) {
-			
+			$property = $filter->getProperty();
+			$property = $this->getQueryProperty($property);
+			switch($filter->getType()) {
+				case FilterInterface::TYPE_STRING:
+					$this->applyStringFilter($property, $filter);
+				break;
+				case FilterInterface::TYPE_NUMERIC:
+					$this->applyNumericFilter($property, $filter);
+				break;
+				case FilterInterface::TYPE_DATE:
+				case FilterInterface::TYPE_DATETIME:
+					$this->applyDateFilter($property, $filter);
+				break;
+				case FilterInterface::TYPE_BOOLEAN:
+					$this->applyBooleanFilter($property, $filter);
+				break;
+				case FilterInterface::TYPE_LIST:
+					$this->applyListFilter($property, $filter);
+				break;
+				case FilterInterface::TYPE_PARENT:
+					$this->applyParentFilter($property, $filter);
+				break;
+			}
 		}
 		
 		return $this;
+	}
+
+	protected function applyParentFilter($arFields, FilterInterface $filter) {
+		$qb = $this->qb;
+		$qf = $this->qf;
+		
+		$constraint = null;
+		foreach($arFields as $qField) {
+			$c = $qf->childNode($filter->getValue(),$f->getAlias());
+			if($constraint) {
+				$constraint->orWhere($c);
+			} else {
+				$constraint = $c;
+			}
+		}
+		
+		if($constraint) {
+			$qb->andWhere($constraint);
+		}
+	}
+	
+	public function applyStringFilter($arFields, FilterInterface $filter) {
+		$qb = $this->qb;
+		$qf = $this->qf;
+		
+		$constraint = null;
+		foreach($arFields as $qField) {
+			$c = $qf->comparison($qf->propertyValue($qField->getName(),$qField->getAlias()), QueryObjectModelConstantsInterface::JCR_OPERATOR_LIKE, $qf->literal($filter->getValue()));
+			if($constraint) {
+				$constraint->orWhere($c);
+			} else {
+				$constraint = $c;
+			}
+		}
+		
+		if($constraint) {
+			$qb->andWhere($constraint);
+		}
 	}
 	
 	/**
@@ -49,8 +120,9 @@ class QueryBuilderDecorator {
 
 		foreach($sorterCollection as $sorter) {
 			$property = $this->getQueryProperty($sorter->getProperty());
-			// FIXME: null powienien być zastąpiony aliasem noda, o którego pytamy
-			$qb->addOrderBy($qf->propertyValue($property,null),$sorter->getDirection());
+			foreach($property as $queryField) {
+				$qb->addOrderBy($qf->propertyValue($queryField->getName(),$queryField->getAlias()),$sorter->getDirection());
+			}
 		}
 		
 		return $this;
@@ -79,19 +151,22 @@ class QueryBuilderDecorator {
 	public function applySearching($query,array $fields) {
 		$qb = $this->qb;
 		$qf = $this->qf;
-		$constraint = null;
 		
+		$constraint = null;
 		foreach($fields as $field) {
-			$field = $this->getQueryProperty($field);
+			$arFields = $this->getQueryProperty($field);
+			
+			foreach($arFields as $qField) {
+				$c = $qf->comparison($qf->propertyValue($qField->getName(),$qField->getAlias()), Constants::JCR_OPERATOR_LIKE, $qf->literal($query.'%'));
+				if($constraint) {
+					$constraint->orWhere($c);
+				} else {
+					$constraint = $qf->comparison($c);
+				}	
+			}
 			// FIXME: tylko po polach typu string
 			// FIXME: możliwość ustalenia like %saf% lub %dfssa lub dsfd%
 			// FIXME: możliwość ustalenia dodatkowych filtrów (lowercase, usuwanie białych znaków, przecinków itd)
-			$c = $qf->comparison($qf->propertyValue($field,null), Constants::JCR_OPERATOR_LIKE, $qf->literal($query.'%'));
-			if($constraint) {
-				$constraint->orWhere($c);
-			} else {
-				$constraint = $qf->comparison($c);
-			}
 		}
 	
 		if($constraint) {
@@ -101,11 +176,34 @@ class QueryBuilderDecorator {
 		return $this;
 	}
 	
-	
 	private function getQueryProperty($property) {
-		$property = $this->underscoreToCamelCase($property);
-	
-		return $property;
+		$name = (array)$this->underscoreToCamelCase($property);
+		$alias = key_exists('_rootAlias',$this->propertyMap) ? $this->propertyMap['_rootAlias'] : null;
+
+		if(key_exists($property,$this->propertyMap)) {
+			$arProperty = $this->propertyMap[$property];
+			$alias = isset($arProperty['alias']) ? $arProperty['alias'] : $alias;
+			$name = isset($arProperty['name']) ? (array)$arProperty['name'] : $name;
+		}
+		
+		if($alias) {
+			$property = $alias .'.'.$name;
+		}
+		
+		$arProperties = array();
+		foreach($name as $n) {
+			$a = $alias;
+			if(is_array($n)) {
+				$a = key_exists('alias',$n) ? $n['alias'] : $alias;
+				$n = key_exists('name',$n) ? $n['name'] : array_shift($n);
+			}
+			$qProperty = new QueryField();
+			$qProperty->setAlias($a);
+			$qProperty->setName($n);
+			$arProperties[] = $qProperty; 
+		}
+		
+		return $arProperties;
 	}
 	
 	private function underscoreToCamelCase($string, $capitalizeFirstCharacter = false) {

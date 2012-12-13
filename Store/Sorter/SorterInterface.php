@@ -13,6 +13,11 @@ interface SorterInterface {
 	/**
 	 * @return string
 	 */
-	public function getDirection();	
+	public function getDirection();
+
+	/**
+   * @return string|null
+	 */
+	public function getAlias();
 }
 ?>

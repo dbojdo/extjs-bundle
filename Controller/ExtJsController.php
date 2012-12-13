@@ -74,7 +74,7 @@ class ExtJsController
 		$user = null;
 		if($this->container->get('security.context')->getToken()) {
 			$user = $this->container->get('security.context')->getToken()->getUser();
-			$user = $user != 'anon.' ?: null;	
+			$user = $user != 'anon.' ? $user : null;	
 		}
 		
 		if($user) {

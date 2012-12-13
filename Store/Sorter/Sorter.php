@@ -18,8 +18,16 @@ class Sorter implements SorterInterface {
 	 */
 	protected $direction;
 	
-	public function __construct($property,$direction = SorterInterface::DIRECTION_ASC) {
+	/**
+	 *
+	 * @var string
+	 * @JMS\Type("string")
+	 */
+	protected $alias;
+	
+	public function __construct($property, $alias = null, $direction = SorterInterface::DIRECTION_ASC) {
 		$this->property = $property;
+		$this->alias = $alias;
 		$this->direction = $direction;
 	}
 	
@@ -29,6 +37,22 @@ class Sorter implements SorterInterface {
 
 	public function getDirection() {
 		return $this->direction;
+	}
+	
+	public function getAlias() {
+		return $this->alias;
+	}
+	
+	/**
+	 * @JMS\PostDeserialize
+	 */
+	public function postDeserialize() {
+		$property = $this->getProperty();
+		$arProperty = explode('.',$property);
+		if(count($arProperty) > 1) {
+			$this->property = array_pop($arProperty);
+			$this->alias = array_pop($arProperty);
+		}
 	}
 }
 ?>

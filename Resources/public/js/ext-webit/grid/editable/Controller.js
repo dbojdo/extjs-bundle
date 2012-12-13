@@ -55,7 +55,7 @@ Ext.define('Webit.grid.editable.Controller',{
 				win.getEl().unmask();
 				if(response.success) {
 					var sel = win.grid.getSelectionModel().getSelection();
-					if(sel.length == 1) {
+					if(sel.length == 1 && !phantom) {
 						win.grid.getStore().suspendAutoSync();
 							sel[0].set(record.getData());
 							win.grid.getStore().commitChanges();
@@ -70,7 +70,7 @@ Ext.define('Webit.grid.editable.Controller',{
 						win.grid.getSelectionModel().deselectAll();
 					}
 					
-					win.fireEvent('recordSave',r,phantom);
+					win.grid.fireEvent('recordSave',win.grid,r,phantom);
 					win.close();
 				} else {
 					Ext.Msg.alert('Błąd','Wystąpił błąd podczas próby zapisu.');

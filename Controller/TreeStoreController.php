@@ -39,6 +39,18 @@ class TreeStoreController extends FOSRestController {
 			return $this->handleView($view);
 		}
 		
+		public function insertNodeAction() {
+			
+		}
+		
+		public function moveNodeAction() {
+			
+		}
+		
+		public function deleteNodeAction() {
+			
+		}
+		
 		protected function getStore() {
 			if(is_null($this->store)) {
 				$this->setStoreService();

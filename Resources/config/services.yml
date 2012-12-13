@@ -1,4 +1,6 @@
 parameters:
+  webit_ext_js.tree_store_abstract.class: Webit\Bundle\ExtJsBundle\TreeStore\TreeStoreAbstract
+  webit_ext_js.store_abstract.class: Webit\Bundle\ExtJsBundle\Store\StoreAbstract
   webit_ext_js.controller.extjs.class: Webit\Bundle\ExtJsBundle\Controller\ExtJsController
   webit_ext_js.controller_store.class: Webit\Bundle\ExtJsBundle\Controller\StoreController
   webit_ext_js.controller_tree_store.class: Webit\Bundle\ExtJsBundle\Controller\TreeStoreController
@@ -7,6 +9,16 @@ parameters:
   webit_ext_js.extjs_document_classes_provider.class: Webit\Bundle\ExtJsBundle\Service\ExtJsDocumentClassesProvider
 
 services:
+  webit_ext_js.tree_store_abstract:
+    class: %webit_ext_js.tree_store_abstract.class%
+    calls:
+      - [setContainer, [@service_container]]
+      - [init]
+  webit_ext_js.store_abstract:
+    class: %webit_ext_js.tree_store_abstract.class%
+    calls:
+      - [setContainer, [@service_container]]
+      - [init]
   webit_ext_js.controller_store:
     class: %webit_ext_js.controller_store.class%
     calls:

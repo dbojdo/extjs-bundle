@@ -29,7 +29,6 @@ Ext.define('Webit.grid.editable.EditWindow',{
 		}
 	}],
 	initComponent: function() {
-		this.addEvents('recordSave');
 		if(this.grid && Ext.isEmpty(this.renderTo)) {
 			Ext.apply(this,{
 				renderTo: this.grid.getEl()
