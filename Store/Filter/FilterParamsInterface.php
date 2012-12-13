@@ -14,5 +14,6 @@ interface FilterParamsInterface {
 	
 	public function getCaseSensitive();
 	public function getLikeWildcard();
+	public function getNegation();
 }
 ?>

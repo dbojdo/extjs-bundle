@@ -119,7 +119,8 @@ class QueryBuilderDecorator {
 		$cs = $filter->getParams()->getCaseSensitive();
 		$arCond = array();
 		foreach($property as $f) {
-			$arCond[] = $qb->expr()->like(($cs ? $f : $qb->expr()->lower($f)),$value);
+			$cond = $qb->expr()->like(($cs ? $f : $qb->expr()->lower($f)),$value);
+			$arCond[] = $filterParams->getNegation() ? $qb->expr()->not($cond) : $cond;
 		}
 		
 		if(count($arCond) > 0) {
@@ -212,7 +213,8 @@ class QueryBuilderDecorator {
 			// FIXME: możliwość ustalenia like %saf% lub %dfssa lub dsfd%
 			// FIXME: możliwość ustalenia dodatkowych filtrów (lowercase, usuwanie białych znaków, przecinków itd)
 			foreach($arField as $f) {
-				$arCond[] = $qb->expr()->like(($cs ? $f : $qb->expr()->lower($f)),$query);
+				$cond = $qb->expr()->like(($cs ? $f : $qb->expr()->lower($f)),$query);
+				$arCond[] = $filterParams->getNegation() ? $qb->expr()->not($cond) : $cond;
 			}
 		}
 		

@@ -13,7 +13,11 @@ class FilterParams implements FilterParamsInterface {
 	 * @var string
 	 * @JMS\Type("array")
 	 */
-	protected $params = array('case_sensitive'=>false,'like_wildcard'=>FilterParamsInterface::LIKE_WILDCARD_NONE);
+	protected $params = array(
+		'case_sensitive'=>false,
+		'like_wildcard'=>FilterParamsInterface::LIKE_WILDCARD_NONE,
+		'negation'=>false
+	);
 	
 	public function __construct(array $params = null) {
 		if($params) {
@@ -27,6 +31,10 @@ class FilterParams implements FilterParamsInterface {
 	
 	public function getLikeWildcard() {
 		return $this->params['like_wildcard'];
+	}
+	
+	public function getNegation() {
+		return $this->params['negation'];
 	}
 }
 ?>
