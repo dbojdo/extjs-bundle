@@ -120,7 +120,7 @@ class QueryBuilderDecorator {
 		$arCond = array();
 		foreach($property as $f) {
 			$cond = $qb->expr()->like(($cs ? $f : $qb->expr()->lower($f)),$value);
-			$arCond[] = $filterParams->getNegation() ? $qb->expr()->not($cond) : $cond;
+			$arCond[] = $filter->getParams()->getNegation() ? $qb->expr()->not($cond) : $cond;
 		}
 		
 		if(count($arCond) > 0) {
