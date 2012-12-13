@@ -126,26 +126,25 @@ class QueryBuilderDecorator {
 		$value = (float)$filter->getValue();
 		$arCond = array();
 		foreach($property as $f) {
-			$arCond[] = $qb->expr()->eq($property,$qb->expr()->literal($value));
 			switch($filter->getComparision()) {
 				case FilterInterface::COMPARISION_GREATER:
-					$arCond[] = $qb->expr()->gt($property,$value);
+					$arCond[] = $qb->expr()->gt($f,$value);
 					break;
 				case FilterInterface::COMPARISION_LESS:
-					$arCond[] = $qb->expr()->lt($property,$value);
+					$arCond[] = $qb->expr()->lt($f,$value);
 					break;
 				case FilterInterface::COMPARISION_LESS_OR_EQUAL:
-					$arCond[] = $qb->expr()->lte($property,$value);
+					$arCond[] = $qb->expr()->lte($f,$value);
 					break;
 				case FilterInterface::COMPARISION_GREATER_OR_EQUAL:
-					$arCond[] = $qb->expr()->gte($property,$value);
+					$arCond[] = $qb->expr()->gte($f,$value);
 					break;
 				case FilterInterface::COMPARISION_NOT:
-					$arCond[] = $qb->expr()->neq($property,$value);
+					$arCond[] = $qb->expr()->neq($f,$value);
 					break;
 				default:
 					//FilterInterface::COMPARISION_EQUAL:
-					$arCond[] = $qb->expr()->eq($property,$value);
+					$arCond[] = $qb->expr()->eq($f,$value);
 			}
 		}
 	
