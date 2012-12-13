@@ -17,9 +17,29 @@ interface FilterInterface {
 	const TYPE_LIST = 'list';
 	const TYPE_PARENT = 'parent';
 	
+	/**
+	 * @return string
+	 */
 	public function getProperty();
+	
+	/**
+	 * @return mixed
+	 */
 	public function getValue();
+	
+	/**
+	 * @return string
+	 */
 	public function getType();
+	
+	/**
+	 * @return string
+	 */
 	public function getComparision();
+	
+	/**
+	 * @return FilterParamsInterface
+	 */
+	public function getParams();
 }
 ?>

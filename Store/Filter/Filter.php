@@ -16,12 +16,6 @@ class Filter implements FilterInterface {
 	protected $property;
 	
 	/**
-	 * @var string
-	 * @JMS\Type("string")
-	 */
-	protected $alias;
-	
-	/**
 	 * 
 	 * @var string
 	 * @JMS\Type("string")
@@ -49,48 +43,56 @@ class Filter implements FilterInterface {
 	 */
 	protected $value;
 	
-	public function __construct($property,$value,$alias = null) {
+	/**
+   * @var FilterParams
+   * @JMS\Type("Webit\Bundle\ExtJsBundle\Store\Filter\FilterParams")
+	 */
+	protected $params;
+	
+	public function __construct($property, $value, FilterParams $params = null) {
 		$this->property = $property;
 		$this->value = $value;
-		$this->alias = $alias;
+		$this->params = $params ?: new FilterParams();
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface::getProperty()
+	 */
 	public function getProperty() {
 		$property = empty($this->property) == false ? $this->property : $this->field;
 		return $property;
 	}
-
 	
-	public function getAlias() {
-		return $this->alias;
-	}
-	
+	/**
+	 * (non-PHPdoc)
+	 * @see Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface::getValue()
+	 */
 	public function getValue() {
 		return $this->value;
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface::getComparision()
+	 */
 	public function getComparision() {
 		return $this->comparision;
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface::getType()
+	 */
 	public function getType() {
 		return $this->type;
 	}
 	
 	/**
-	 * @JMS\PostDeserialize
+	 * (non-PHPdoc)
+	 * @see Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface::getParams()
 	 */
-	public function postDeserialize() {
-		$property = $this->getProperty();
-		$arProperty = explode('.',$property);
-		if(count($arProperty) > 1) {
-			if($this->property) {
-				$this->property = array_pop($arProperty);
-			} else {
-				$this->field = array_pop($arProperty);
-			}
-			
-			$this->alias = array_pop($arProperty);
-		}
+	public function getParams() {
+		return $this->params ?: new FilterParams();
 	}
 }

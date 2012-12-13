@@ -1,6 +1,10 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Store\ORM;
 
+use Webit\Bundle\ExtJsBundle\Store\Filter\FilterParams;
+
+use Webit\Bundle\ExtJsBundle\Store\Filter\FilterParamsInterface;
+
 use Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface;
 
 use Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollectionInterface;
@@ -110,10 +114,12 @@ class QueryBuilderDecorator {
 	protected function applyStringFilter($property, FilterInterface $filter) {
 		$qb = $this->qb;
 		$value = (string)$filter->getValue();
+		$value = $this->getStringValueExpression($filter->getParams(), $value);
 		
+		$cs = $filter->getParams()->getCaseSensitive();
 		$arCond = array();
 		foreach($property as $f) {
-			$arCond[] = $qb->expr()->like($f,$qb->expr()->literal($value));
+			$arCond[] = $qb->expr()->like(($cs ? $f : $qb->expr()->lower($f)),$value);
 		}
 		
 		if(count($arCond) > 0) {
@@ -193,7 +199,11 @@ class QueryBuilderDecorator {
 		return $this;
 	}
 	
-	public function applySearching($query,array $fields) {
+	public function applySearching($query,array $fields, FilterParamsInterface $filterParams = null) {
+		$filterParams ?: new FilterParams(array('case_sensitive'=>false,'like_wildcard'=>FilterParamsInterface::LIKE_WILDCARD_RIGHT));
+		
+		$query = $this->getStringValueExpression($filterParams, $query);
+		$cs = $filterParams->getCaseSensitive();
 		$qb = $this->qb;
 		$arCond = array();
 		foreach($fields as $field) {
@@ -202,7 +212,7 @@ class QueryBuilderDecorator {
 			// FIXME: możliwość ustalenia like %saf% lub %dfssa lub dsfd%
 			// FIXME: możliwość ustalenia dodatkowych filtrów (lowercase, usuwanie białych znaków, przecinków itd)
 			foreach($arField as $f) {
-				$arCond[] = $qb->expr()->like($f,$qb->expr()->literal($query.'%'));
+				$arCond[] = $qb->expr()->like(($cs ? $f : $qb->expr()->lower($f)),$query);
 			}
 		}
 		
@@ -238,6 +248,25 @@ class QueryBuilderDecorator {
 		}
 		
 		return $arProperties;
+	}
+	
+	private function getStringValueExpression(FilterParamsInterface $filterParams, $value) {
+		$cs = $filterParams->getCaseSensitive();
+		$wc = $filterParams->getLikeWildcard();
+		switch($wc) {
+			case FilterParamsInterface::LIKE_WILDCARD_LEFT:
+				$value = '%'.$value;
+				break;
+			case FilterParamsInterface::LIKE_WILDCARD_RIGHT:
+				$value .= '%';
+				break;
+			case FilterParamsInterface::LIKE_WILDCARD_BOTH:
+				$value = '%'.$value . '%';
+				break;
+		}
+		$value = $cs ? $value : mb_strtolower($value);
+		
+		return $this->qb->expr()->literal($value);
 	}
 	
 	private function underscoreToCamelCase($string, $capitalizeFirstCharacter = false) {
