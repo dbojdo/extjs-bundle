@@ -25,9 +25,8 @@ class Sorter implements SorterInterface {
 	 */
 	protected $alias;
 	
-	public function __construct($property, $alias = null, $direction = SorterInterface::DIRECTION_ASC) {
+	public function __construct($property, $direction = SorterInterface::DIRECTION_ASC) {
 		$this->property = $property;
-		$this->alias = $alias;
 		$this->direction = $direction;
 	}
 	

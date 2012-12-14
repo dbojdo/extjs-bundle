@@ -63,8 +63,8 @@ class QueryBuilderDecorator {
 				case FilterInterface::TYPE_LIST:
 					$this->applyListFilter($property, $filter);
 				break;
-				case FilterInterface::TYPE_PARENT:
-					$this->applyParentFilter($property, $filter);
+				case FilterInterface::TYPE_NODE:
+					$this->applyNodeFilter($property, $filter);
 				break;
 			}
 		}
@@ -72,10 +72,47 @@ class QueryBuilderDecorator {
 		return $this;
 	}
 
-	protected function applyParentFilter($arFields, FilterInterface $filter) {
+	protected function applyNodeFilter($arFields, FilterInterface $filter) {
 		$qb = $this->qb;
 		$qf = $this->qf;
 		
+		$constraint = null;
+		foreach($arFields as $qField) {
+			switch($filter->getComparision()) {
+				case FilterInterface::COMPARISION_CHILD:
+					$c = $qf->childNode($filter->getValue(),$qField->getAlias());
+				break;
+				case FilterInterface::COMPARISION_DESCENDANT:
+					$c = $qf->descendantNode($filter->getValue(),$qField->getAlias());
+				break;
+				case FilterInterface::COMPARISION_CHILD_OR_EQUAL:
+					$c = $qf->orConstraint($qf->childNode($filter->getValue(),$qField->getAlias()),
+						$qf->sameNode($filter->getValue(),$qField->getAlias()));
+				break;
+				case FilterInterface::COMPARISION_DESCENDANT_OR_EQUAL:
+					$c = $qf->orConstraint($qf->descendantNode($filter->getValue(),$qField->getAlias()),
+					$qf->sameNode($filter->getValue(),$qField->getAlias()));
+				break;
+				default:
+					$c = $qf->sameNode($filter->getValue(),$qField->getAlias());
+			}
+			
+			if($constraint) {
+				$constraint->orWhere($c);
+			} else {
+				$constraint = $c;
+			}
+		}
+		
+		if($constraint) {
+			$qb->andWhere($constraint);
+		}
+	}
+	
+	protected function applyChildFilter($arFields, FilterInterface $filter) {
+		$qb = $this->qb;
+		$qf = $this->qf;
+	
 		$constraint = null;
 		foreach($arFields as $qField) {
 			$c = $qf->childNode($filter->getValue(),$f->getAlias());
@@ -85,7 +122,7 @@ class QueryBuilderDecorator {
 				$constraint = $c;
 			}
 		}
-		
+	
 		if($constraint) {
 			$qb->andWhere($constraint);
 		}
