@@ -201,7 +201,7 @@ class QueryBuilderDecorator {
 	}
 	
 	public function applySearching($query,array $fields, FilterParamsInterface $filterParams = null) {
-		$filterParams ?: new FilterParams(array('case_sensitive'=>false,'like_wildcard'=>FilterParamsInterface::LIKE_WILDCARD_RIGHT));
+		$filterParams = $filterParams ?: new FilterParams(array('case_sensitive'=>false,'like_wildcard'=>FilterParamsInterface::LIKE_WILDCARD_RIGHT));
 		
 		$query = $this->getStringValueExpression($filterParams, $query);
 		$cs = $filterParams->getCaseSensitive();
