@@ -235,10 +235,6 @@ class QueryBuilderDecorator {
 			$name = isset($arProperty['name']) ? (array)$arProperty['name'] : $name;
 		}
 		
-		if($alias) {
-			$property = $alias .'.'.$name;
-		}
-		
 		$arProperties = array();
 		foreach($name as $n) {
 			$a = $alias;
