@@ -73,11 +73,27 @@ class Filter implements FilterInterface {
 	}
 	
 	/**
+	 * 
+	 * @param string $comparision
+	 */
+	public function setComparision($comparision) {
+		$this->comparision = $comparision;
+	}
+	
+	/**
 	 * (non-PHPdoc)
 	 * @see Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface::getComparision()
 	 */
 	public function getComparision() {
 		return $this->comparision;
+	}
+	
+	/**
+	 * 
+	 * @param string $type
+	 */
+	public function setType($type) {
+		$this->type = $type;
 	}
 	
 	/**
