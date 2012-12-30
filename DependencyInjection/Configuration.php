@@ -1,5 +1,4 @@
 <?php
-
 namespace Webit\Bundle\ExtJsBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
