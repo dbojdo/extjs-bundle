@@ -20,8 +20,12 @@ Ext.define('Webit.grid.editable.Controller',{
 			'webit_grid_editable_grid button[itemId="del"]': {
 				click: this.onDelete
 			},
-			'webit_grid_editable_edit_window button[itemId="save"]': {
-				click: this.onWindowSave
+			'webit_grid_editable_edit_window': {
+				show: function(window) {
+					if(!window.down('button[itemId="save"]').handler) {
+						window.down('button[itemId="save"]').setHandler(this.onWindowSave);
+					}
+				}
 			}
 		});
 	},
