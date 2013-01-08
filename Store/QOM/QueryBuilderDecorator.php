@@ -98,7 +98,7 @@ class QueryBuilderDecorator {
 			}
 			
 			if($constraint) {
-				$constraint->orWhere($c);
+				$constraint = $qf->orConstraint($constraint,$c);
 			} else {
 				$constraint = $c;
 			}
@@ -117,7 +117,7 @@ class QueryBuilderDecorator {
 		foreach($arFields as $qField) {
 			$c = $qf->childNode($filter->getValue(),$f->getAlias());
 			if($constraint) {
-				$constraint->orWhere($c);
+				$constraint = $qf->orConstraint($constraint,$c);
 			} else {
 				$constraint = $c;
 			}
@@ -136,7 +136,7 @@ class QueryBuilderDecorator {
 		foreach($arFields as $qField) {
 			$c = $qf->comparison($qf->propertyValue($qField->getName(),$qField->getAlias()), QueryObjectModelConstantsInterface::JCR_OPERATOR_LIKE, $qf->literal($filter->getValue()));
 			if($constraint) {
-				$constraint->orWhere($c);
+				$constraint = $qf->orConstraint($constraint,$c);
 			} else {
 				$constraint = $c;
 			}
@@ -196,10 +196,10 @@ class QueryBuilderDecorator {
 			foreach($arFields as $qField) {
 				$c = $qf->comparison($qf->propertyValue($qField->getName(),$qField->getAlias()), Constants::JCR_OPERATOR_LIKE, $qf->literal($query.'%'));
 				if($constraint) {
-					$constraint->orWhere($c);
+					$constraint = $qf->orConstraint($constraint,$c);
 				} else {
-					$constraint = $qf->comparison($c);
-				}	
+					$constraint = $c;
+				}
 			}
 			// FIXME: tylko po polach typu string
 			// FIXME: możliwość ustalenia like %saf% lub %dfssa lub dsfd%
