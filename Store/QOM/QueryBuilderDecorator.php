@@ -1,7 +1,7 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Store\QOM;
 
-use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
+use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants
 
 use Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface;
 
@@ -134,7 +134,7 @@ class QueryBuilderDecorator {
 		
 		$constraint = null;
 		foreach($arFields as $qField) {
-			$c = $qf->comparison($qf->propertyValue($qField->getName(),$qField->getAlias()), QueryObjectModelConstantsInterface::JCR_OPERATOR_LIKE, $qf->literal($filter->getValue()));
+			$c = $qf->comparison($qf->propertyValue($qField->getName(),$qField->getAlias()), Constants::JCR_OPERATOR_LIKE, $qf->literal($filter->getValue()));
 			if($constraint) {
 				$constraint = $qf->orConstraint($constraint,$c);
 			} else {

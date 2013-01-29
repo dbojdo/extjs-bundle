@@ -5,11 +5,24 @@ Ext.define('Webit.grid.editable.Controller',{
 			'webit_grid_editable_grid' : {
 				selectionchange: this.onGridSelectionchange
 			},
-			'webit_grid_editable_grid[editmode="window"] button[itemId="add"]': {
-				click: this.onWindowAdd
-			},
-			'webit_grid_editable_grid[editmode="window"] button[itemId="edit"]': {
-				click: this.onWindowEdit
+			'webit_grid_editable_grid[editmode="window"]' : {
+				// set grid toolbar's buttons' handlers
+				afterrender: function(grid) {
+					var addBtn = grid.down('button[itemId="add"]');
+					if(addBtn && !addBtn.handler) {
+						addBtn.setHandler(this.onWindowAdd);
+					}
+					
+					var editBtn = grid.down('button[itemId="edit"]');
+					if(editBtn && !editBtn.handler) {
+						editBtn.setHandler(this.onWindowEdit);
+					}
+					
+					var delBtn = grid.down('button[itemId="del"]');
+					if(delBtn && !delBtn.handler) {
+						delBtn.setHandler(this.onDelete);
+					}
+				}
 			},
 			'webit_grid_editable_grid[editmode="row"] button[itemId="add"]': {
 				click: this.onRowAdd
@@ -17,13 +30,11 @@ Ext.define('Webit.grid.editable.Controller',{
 			'webit_grid_editable_grid[editmode="row"] button[itemId="edit"]': {
 				click: this.onRowEdit
 			},
-			'webit_grid_editable_grid button[itemId="del"]': {
-				click: this.onDelete
-			},
 			'webit_grid_editable_edit_window': {
 				show: function(window) {
-					if(!window.down('button[itemId="save"]').handler) {
-						window.down('button[itemId="save"]').setHandler(this.onWindowSave);
+					var saveButton = window.down('toolbar button[itemId="save"]');
+					if(saveButton && !saveButton.handler) {
+						saveButton.setHandler(this.onWindowSave);
 					}
 				}
 			}
