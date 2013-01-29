@@ -1,10 +1,8 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Store\QOM;
 
-use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants
-
+use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface;
-
 use Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection;
 use Webit\Bundle\ExtJsBundle\Store\Filter\FilterCollection;
 use PHPCR\Util\QOM\QueryBuilder;
