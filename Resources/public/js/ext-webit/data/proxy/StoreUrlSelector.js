@@ -12,14 +12,17 @@ Webit.data.proxy.StoreUrlSelector = function(routingParams, request) {
     	};
     };
     
+    var readRouting  = routingParams.readRouting || 'webit_extjs_get_item';
+    var writeRouting  = routingParams.writeRouting || 'webit_extjs_get_items';
+    
     if(request.url) {
     	return request.url;
     }
 
     if(id && operation.action == 'read') {
-    	return Routing.generate('webit_extjs_get_item',routingParams);
+    	return Routing.generate(readRouting,routingParams);
     } else {
-    	return Routing.generate('webit_extjs_get_items',routingParams);
+    	return Routing.generate(writeRouting,routingParams);
     }
 	};
 };

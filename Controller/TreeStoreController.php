@@ -79,7 +79,7 @@ class TreeStoreController extends FOSRestController {
 			$storeService = $this->container->get($storeId);
 			 
 			if(($storeService instanceof TreeStoreInterface) == false) {
-				throw new \InvalidArgumentException('Service must be instance of ExtJsStoreInterface.');
+				throw new \InvalidArgumentException('Service must be instance of TreeStoreInterface.');
 			}
 			 
 			return $storeService;

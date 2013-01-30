@@ -133,7 +133,7 @@ Ext.define('Webit.grid.editable.Controller',{
 				if(response.success) {
 					form.loadRecord(r);
 				} else {
-					Ext.Msg.alert('Ładowanie dancyh','Wystąpił błąd podczas ładowania danych.');
+					Ext.Msg.alert('Ładowanie danych','Wystąpił błąd podczas ładowania danych.');
 					win.close();
 				}
 			}
