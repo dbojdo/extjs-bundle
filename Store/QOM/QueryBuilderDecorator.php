@@ -168,7 +168,9 @@ class QueryBuilderDecorator {
 	 * @param integer $limit
 	 */
 	public function applyLimit($limit) {
-		$this->qb->setMaxResults($limit);
+		if($limit === null || (int)$limit > 0) {
+			$this->qb->setMaxResults($limit);
+		}
 		
 		return $this;
 	}
@@ -178,10 +180,12 @@ class QueryBuilderDecorator {
 	 * @param integer $offset
 	 */
 	public function applyOffset($offset) {
-		$this->qb->setFirstResult($offset);
+		if($offset === null || (int)$offset > 0) {
+			$this->qb->setFirstResult($offset);
+		}
 		
 		return $this;
-	} 
+	}
 
 	public function applySearching($query,array $fields) {
 		$qb = $this->qb;
