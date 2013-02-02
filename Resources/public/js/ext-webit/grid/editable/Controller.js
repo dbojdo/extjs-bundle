@@ -124,21 +124,21 @@ Ext.define('Webit.grid.editable.Controller',{
 		win.getModel().load(sel[0].getId(),{
 			callback: function(r,response) {
 				win.getEl().unmask();
-				Ext.each(win.down('form').query('combo'),function(combo) {
-					if(r.fields.containsKey(combo.getItemId())) {
-						combo.getStore().insert(0,r.get(combo.getItemId()));	
-					}
-				});
-					
 				if(response.success) {
+					r = r || sel[0];
+					Ext.each(win.down('form').query('combo'),function(combo) {
+						if(r.fields.containsKey(combo.getItemId())) {
+							combo.getStore().insert(0,r.get(combo.getItemId()));	
+						}
+					});
+				
 					form.loadRecord(r);
 				} else {
 					Ext.Msg.alert('Ładowanie danych','Wystąpił błąd podczas ładowania danych.');
 					win.close();
 				}
 			}
-		})
-		
+		});
 	},
 	onRowAdd: function(btn) {
 		var grid = btn.up('grid');
