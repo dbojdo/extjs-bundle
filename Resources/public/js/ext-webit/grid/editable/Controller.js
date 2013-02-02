@@ -3,7 +3,13 @@ Ext.define('Webit.grid.editable.Controller',{
 	init : function() {
 		this.control({
 			'webit_grid_editable_grid' : {
-				selectionchange: this.onGridSelectionchange
+				selectionchange: this.onGridSelectionchange,
+				afterrender: function(grid) {
+					var delBtn = grid.down('button[itemId="del"]');
+					if(delBtn && !delBtn.handler) {
+						delBtn.setHandler(this.onDelete);
+					}
+				}
 			},
 			'webit_grid_editable_grid[editmode="window"]' : {
 				// set grid toolbar's buttons' handlers
@@ -16,11 +22,6 @@ Ext.define('Webit.grid.editable.Controller',{
 					var editBtn = grid.down('button[itemId="edit"]');
 					if(editBtn && !editBtn.handler) {
 						editBtn.setHandler(this.onWindowEdit);
-					}
-					
-					var delBtn = grid.down('button[itemId="del"]');
-					if(delBtn && !delBtn.handler) {
-						delBtn.setHandler(this.onDelete);
 					}
 				}
 			},
