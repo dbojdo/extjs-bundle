@@ -19,7 +19,13 @@ Ext.define('Webit.form.field.ClearableField',{
 				disabled: true,
 				tooltip: 'Wyczyść',
 				handler: function(btn) {
-					btn.prev('field').clearValue();
+					var field = btn.prev('field');
+					if(Ext.isFunction(field.clearValue)) {
+						field.clearValue();
+					} else {
+						field.setValue(null);
+					}
+					
 					btn.disable();
 				}
 			});
