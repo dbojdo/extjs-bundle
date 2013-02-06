@@ -70,7 +70,6 @@ class TreeStoreController extends FOSRestController {
 		 * Return node's data
 		 * @FOS\QueryParam(name="id", description="Page of the overview.")
 		 * @FOS\Route("/tree/node")
-		 * @FOS\PUT
 		 */
 		public function putNodeAction() {
 			$store = $this->getStore();
@@ -83,7 +82,6 @@ class TreeStoreController extends FOSRestController {
 		 * Return node's data
 		 * @FOS\QueryParam(name="id", description="Page of the overview.")
 		 * @FOS\Route("/tree/node")
-		 * @FOS\DELETE
 		 */
 		public function deleteNodeAction() {
 			
