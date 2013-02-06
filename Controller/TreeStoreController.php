@@ -25,12 +25,13 @@ class TreeStoreController extends FOSRestController {
 		protected $store;
 
 		/**
+		 * Returns children of given node
 		 * @FOS\QueryParam(name="id", description="Page of the overview.")
-		 * @FOS\Route("/treestore/node")
+		 * @FOS\Route("/tree/load")
 		 *
 		 * @param ParamFetcher $paramFetcher
 		 */
-		public function getNodeAction(ParamFetcher $paramFetcher) {
+		public function loadNodeAction(ParamFetcher $paramFetcher) {
 			$json = $this->getStore()->loadNode($paramFetcher->get('id'));
 
 			$view = View::create($json);
@@ -39,14 +40,51 @@ class TreeStoreController extends FOSRestController {
 			return $this->handleView($view);
 		}
 		
-		public function insertNodeAction() {
+		/**
+		 * Return node's data
+		 * @FOS\QueryParam(name="id", description="Page of the overview.")
+		 * @FOS\Route("/tree/node-data")
+		 */
+		public function getNodeAction(ParamFetcher $paramFetcher) {
+			$json = $this->getStore()->loadNode($paramFetcher->get('id'));
 			
+			$view = View::create($json);
+			$this->container->get('serializer')->setGroups($json->getSerializerGroups());
+				
+			return $this->handleView($view);
+		}
+
+		/**
+		 * Return node's data
+		 * @FOS\QueryParam(name="id", description="Page of the overview.")
+		 * @FOS\Route("/tree/node")
+		 */
+		public function postNodeAction() {
+			$store = $this->getStore();
+			$arNodes = $this->get('serializer')->deserialize($this->getRequest()->getContent(),$store->getDataClass());
+			var_dump($arNodes);
+			//$json = $this->getStore()->createNodes();
 		}
 		
-		public function moveNodeAction() {
-			
+		/**
+		 * Return node's data
+		 * @FOS\QueryParam(name="id", description="Page of the overview.")
+		 * @FOS\Route("/tree/node")
+		 * @FOS\PUT
+		 */
+		public function putNodeAction() {
+			$store = $this->getStore();
+			$arNodes = $this->get('serializer')->deserialize($this->getRequest()->getContent(),$store->getDataClass());
+			var_dump($arNodes);
+			//$json = $this->getStore()->createNodes();
 		}
 		
+		/**
+		 * Return node's data
+		 * @FOS\QueryParam(name="id", description="Page of the overview.")
+		 * @FOS\Route("/tree/node")
+		 * @FOS\DELETE
+		 */
 		public function deleteNodeAction() {
 			
 		}
