@@ -40,6 +40,15 @@ class Chart {
 	 * 
 	 * @var string
 	 * @JMS\Type("string")
+	 * @JMS\SerializedName("cls")
+	 * @JMS\Groups({"chartInfo"})
+	 */
+	protected $cls;
+
+	/**
+	 * 
+	 * @var string
+	 * @JMS\Type("string")
 	 * @JMS\SerializedName("itemId")
 	 * @JMS\Groups({"chartInfo"})
 	 */
@@ -97,6 +106,20 @@ class Chart {
 	 * @JMS\Groups({"chartInfo"})
 	 */
 	protected $theme = self::THEME_BASE;
+
+	/**
+	 * @JMS\Type("integer")
+	 * @JMS\SerializedName("width")
+	 * @JMS\Groups({"chartInfo"})
+	 */
+	protected $width;
+
+	/**
+	 * @JMS\Type("integer")
+	 * @JMS\SerializedName("height")
+	 * @JMS\Groups({"chartInfo"})
+	 */
+	protected $height;
 
 	public function __construct() {
 		$this->legend = new Legend();
@@ -158,7 +181,7 @@ class Chart {
 		return $this->legend;
 	}
 
-	public function setLegend(Legend $legend) {
+	public function setLegend($legend) {
 		$this->legend = $legend;
 	}
 
@@ -196,6 +219,30 @@ class Chart {
 
 	public function setXtype($xtype) {
 		$this->xtype = $xtype;
+	}
+
+	public function getWidth() {
+		return $this->width;
+	}
+
+	public function setWidth($width) {
+		$this->width = $width;
+	}
+
+	public function getHeight() {
+		return $this->height;
+	}
+
+	public function setHeight($height) {
+		$this->height = $height;
+	}
+
+	public function getCls() {
+		return $this->cls;
+	}
+
+	public function setCls($cls) {
+		$this->cls = $cls;
 	}
 }
 ?>

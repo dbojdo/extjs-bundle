@@ -67,6 +67,13 @@ class Series {
 	 */
 	protected $axis;
 	
+	/**
+	 * @JMS\Type("array")
+	 * @JMS\SerializedName("label")
+	 * @JMS\Groups({"chartInfo"})
+	 */
+	protected $label;
+	
 	public function getHighlight(){
 		return $this->highlight;
 	}
@@ -137,6 +144,14 @@ class Series {
 	
 	public function getAxis() {
 		return $this->axis;
+	}
+	
+	public function setLabel($label) {
+		$this->label = $label;
+	}
+	
+	public function getLabel() {
+		return $this->label;
 	}
 }
 ?>

@@ -103,7 +103,7 @@ class Legend {
 	 * @JMS\SerializedName("visible")
 	 * @JMS\Groups({"chartInfo"})
 	 */
-	protected $visibl;
+	protected $visible;
 
 	/**
 	 * 
