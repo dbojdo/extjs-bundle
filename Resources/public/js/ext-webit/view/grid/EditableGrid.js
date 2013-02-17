@@ -1,6 +1,6 @@
-Ext.define('Webit.grid.editable.Grid',{
+Ext.define('Webit.view.grid.EditableGrid',{
 	extend: 'Ext.grid.Panel',
-	alias: 'widget.webit_grid_editable_grid',
+	alias: 'widget.webit_grid_editablegrid',
 	/**
 	 * 
 	 * @type String
@@ -33,7 +33,7 @@ Ext.define('Webit.grid.editable.Grid',{
 			tooltip: 'Edytuj',
 			disabled: true
 		},{
-			xtype: 'webit_grid_editable_buttondelete',
+			xtype: 'webit_button_deletebutton',
 			disabled: true
 		}]
 	}],
