@@ -1,6 +1,9 @@
 Ext.define('Webit.grid.editable.Grid',{
 	extend: 'Ext.grid.Panel',
 	alias: 'widget.webit_grid_editable_grid',
+	requires: [
+	    'Webit.grid.editable.ButtonDelete'
+	],
 	/**
 	 * 
 	 * @type String
