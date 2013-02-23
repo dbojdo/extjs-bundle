@@ -131,12 +131,7 @@ Ext.define('Webit.controller.EditableGrid',{
 				win.getEl().unmask();
 				if(response.success) {
 					r = r || sel[0];
-					Ext.each(win.down('form').query('combo'),function(combo) {
-						if(r.fields.containsKey(combo.getItemId())) {
-							combo.getStore().insert(0,r.get(combo.getItemId()));	
-						}
-					});
-				
+					
 					form.loadRecord(r);
 				} else {
 					Ext.Msg.alert('Ładowanie danych','Wystąpił błąd podczas ładowania danych.');
