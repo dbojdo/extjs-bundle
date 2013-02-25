@@ -64,12 +64,20 @@ class Filter implements FilterInterface {
 		return $property;
 	}
 	
+	public function setProperty($property) {
+		$this->property = $property;
+	}
+	
 	/**
 	 * (non-PHPdoc)
 	 * @see Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface::getValue()
 	 */
 	public function getValue() {
 		return $this->value;
+	}
+	
+	public function setValue($value) {
+		$this->value = $value;
 	}
 	
 	/**

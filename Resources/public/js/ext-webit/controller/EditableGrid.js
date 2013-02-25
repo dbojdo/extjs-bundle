@@ -37,9 +37,16 @@ Ext.define('Webit.controller.EditableGrid',{
 			},
 			'webit_grid_editwindow': {
 				show: function(window) {
-					var saveButton = window.down('toolbar button[itemId="save"]');
+					var saveButton = window.down('button[itemId="save"]');
 					if(saveButton && !saveButton.handler) {
 						saveButton.setHandler(this.onWindowSave);
+					}
+					
+					var cancelButton = window.down('button[itemId="cancel"]');
+					if(cancelButton && !cancelButton.handler) {
+						cancelButton.setHandler(function(btn) {
+							btn.up('window').close();
+						});
 					}
 				}
 			}
@@ -70,6 +77,7 @@ Ext.define('Webit.controller.EditableGrid',{
 		
 		form.updateRecord(r);
 		win.getEl().mask('Zapisywanie...');
+		
 		r.save({
 			callback: function(record, response) {
 				win.getEl().unmask();
@@ -79,6 +87,7 @@ Ext.define('Webit.controller.EditableGrid',{
 						win.grid.getStore().suspendAutoSync();
 							sel[0].set(record.getData());
 							win.grid.getStore().commitChanges();
+							
 						win.grid.getStore().resumeAutoSync();
 						win.grid.getSelectionModel().deselectAll();
 						win.grid.getSelectionModel().select(sel[0]);
