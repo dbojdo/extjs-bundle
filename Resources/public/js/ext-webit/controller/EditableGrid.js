@@ -74,8 +74,9 @@ Ext.define('Webit.controller.EditableGrid',{
 		
 		var r = form.getRecord();
 		var phantom = r.phantom;
-		
+		console.info('up');
 		form.updateRecord(r);
+		console.info('postup');
 		win.getEl().mask('Zapisywanie...');
 		
 		r.save({
