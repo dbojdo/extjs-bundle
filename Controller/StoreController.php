@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Webit\Bundle\ExtJsBundle\Store\ExtJsJson;
 use Webit\Bundle\ExtJsBundle\Store\ExtJsStoreInterface;
+use JMS\Serializer\SerializationContext;
 
 /**
  * 
@@ -40,9 +41,8 @@ class StoreController extends FOSRestController {
 		public function getItemAction(ParamFetcher $paramFetcher) {
 			$json = $this->getStore()->loadModel($paramFetcher->get('id'),$this->getRequest()->query->all());
 			
-			$view = View::create($json);
-			$this->container->get('serializer')->setGroups($json->getSerializerGroups());
-			return $this->handleView($view);
+			$r = $this->createResponse($json);
+			return $r;
 		}
 		
     /**
@@ -64,11 +64,10 @@ class StoreController extends FOSRestController {
     	$sort = $this->container->get('serializer')->deserialize($paramFetcher->get('sort'),'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Sorter\Sorter>','json');
     	$sort = new \Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection($sort);
     	
-			$json = $this->getStore()->getModelList($this->getRequest()->query, $filters, $sort, $paramFetcher->get('page'), $paramFetcher->get('limit'), $paramFetcher->get('start'));
-			
-    	$view = View::create($json);
-    	$this->container->get('serializer')->setGroups($json->getSerializerGroups());
-    	return $this->handleView($view);
+    	$json = $this->getStore()->getModelList($this->getRequest()->query, $filters, $sort, $paramFetcher->get('page'), $paramFetcher->get('limit'), $paramFetcher->get('start'));
+    	 
+			$r = $this->createResponse($json);
+			return $r;
     }
     
     /**
@@ -84,10 +83,9 @@ class StoreController extends FOSRestController {
     	$arData = $this->container->get('serializer')->deserialize($items,$desrializeClass,'json');
     	
     	$json = $this->getStore()->createModels(new ArrayCollection($arData));
-    	$view = View::create($json);
-    	$this->container->get('serializer')->setGroups($json->getSerializerGroups());
     	
-    	return $this->handleView($view);
+    	$r = $this->createResponse($json);
+			return $r;
     } // create
     
     /**
@@ -102,10 +100,9 @@ class StoreController extends FOSRestController {
     	$arData = $this->container->get('serializer')->deserialize($items,$desrializeClass,'json');
 
     	$json = $this->getStore()->updateModels(new ArrayCollection($arData));
-    	$view = View::create($json);
-    	$this->container->get('serializer')->setGroups($json->getSerializerGroups());
     	
-    	return $this->handleView($view);
+    	$r = $this->createResponse($json);
+			return $r;
     } // update
 
     /**
@@ -125,10 +122,8 @@ class StoreController extends FOSRestController {
     	
     	$json = $this->getStore()->deleteModel($arData,$this->getRequest()->request->all());
     	
-    	$view = View::create($json);
-    	$this->container->get('serializer')->setGroups($json->getSerializerGroups());
-    	
-    	return $this->handleView($view);
+    	$r = $this->createResponse($json);
+    	return $r;
     } 
     
     /**
@@ -149,11 +144,9 @@ class StoreController extends FOSRestController {
     	$sort = new \Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection($sort);
     	
     	$json = $this->getStore()->loadChartData($this->getRequest()->query->all(), $filters, $sort, $paramFetcher->get('page'), $paramFetcher->get('limit'), $paramFetcher->get('start'));
-    
-    	$view = View::create($json);
-    	$this->container->get('serializer')->setGroups($json->getSerializerGroups());
-    		
-    	return $this->handleView($view);
+    	
+    	$r = $this->createResponse($json);
+			return $r;
     }
     
     protected function getStore() {
@@ -188,6 +181,26 @@ class StoreController extends FOSRestController {
     	}
     	
     	return $storeService;
+    }
+    
+    private function createResponse(ExtJsJson $json) {
+    	$r = new Response();
+    	$r->headers->add(array('Content-Type'=>'application/json'));
+    	$r->setStatusCode(200,'OK');
+    	$r->setContent($this->get('serializer')->serialize($json,'json',$this->getSerializerContext($json)));
+    	
+    	return $r;
+    }
+    
+    private function getSerializerContext(ExtJsJson $json) {
+    	$arGroups = $json->getSerializerGroups();
+    	if(count($arGroups) > 0) {
+    		$context = SerializationContext::create()->setGroups($json->getSerializerGroups());
+    		
+    		return $context;
+    	}
+    	
+    	return null;
     }
 }
 ?>

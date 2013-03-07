@@ -2,8 +2,10 @@ Ext.define('Webit.override.form.Basic', {
     override: 'Ext.form.Basic', 
     loadRecord: function(record) {
     	Ext.each(this.owner.query('combo'),function(combo) {
-				if(combo.getStore().getCount() == 0 && record.fields.containsKey(combo.getItemId())) {
-					combo.getStore().insert(0,record.get(combo.getItemId()));	
+				if(record.fields.containsKey(combo.getItemId())) {
+					if(record.get(combo.getName()) && combo.findRecordByValue(record.get(combo.getName())) == false) {
+						combo.getStore().insert(0,record.get(combo.getItemId()));	
+					}
 				}
 			});
 			
@@ -56,7 +58,7 @@ Ext.define('Webit.override.form.Basic', {
 	            record.fields.each(function(field) {
 	                name = field.name;
 	                if (field.model) {
-	                    var nestedValues = {};
+	                    var nestedValues = record.get(name);
 	                    var hasValues = false;
 	                    for(var v in values) {
 	                        if (v.indexOf('.') > 0) {

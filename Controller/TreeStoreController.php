@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Webit\Bundle\ExtJsBundle\Store\ExtJsJson;
 use Webit\Bundle\ExtJsBundle\TreeStore\TreeStoreInterface;
+use JMS\Serializer\SerializationContext;
 
 /**
  * 
@@ -33,11 +34,9 @@ class TreeStoreController extends FOSRestController {
 		 */
 		public function loadNodeAction(ParamFetcher $paramFetcher) {
 			$json = $this->getStore()->loadNode($paramFetcher->get('id'));
-
-			$view = View::create($json);
-			$this->container->get('serializer')->setGroups($json->getSerializerGroups());
 			
-			return $this->handleView($view);
+			$r = $this->createResponse($json);
+    	return $r;
 		}
 		
 		/**
@@ -48,10 +47,8 @@ class TreeStoreController extends FOSRestController {
 		public function getNodeAction(ParamFetcher $paramFetcher) {
 			$json = $this->getStore()->loadNode($paramFetcher->get('id'));
 			
-			$view = View::create($json);
-			$this->container->get('serializer')->setGroups($json->getSerializerGroups());
-				
-			return $this->handleView($view);
+			$r = $this->createResponse($json);
+			return $r;
 		}
 
 		/**
@@ -62,7 +59,7 @@ class TreeStoreController extends FOSRestController {
 		public function postNodeAction() {
 			$store = $this->getStore();
 			$arNodes = $this->get('serializer')->deserialize($this->getRequest()->getContent(),$store->getDataClass());
-			var_dump($arNodes);
+			
 			//$json = $this->getStore()->createNodes();
 		}
 		
@@ -74,7 +71,7 @@ class TreeStoreController extends FOSRestController {
 		public function putNodeAction() {
 			$store = $this->getStore();
 			$arNodes = $this->get('serializer')->deserialize($this->getRequest()->getContent(),$store->getDataClass());
-			var_dump($arNodes);
+			
 			//$json = $this->getStore()->createNodes();
 		}
 		
@@ -119,6 +116,26 @@ class TreeStoreController extends FOSRestController {
 			}
 			 
 			return $storeService;
+		}
+		
+		private function createResponse(ExtJsJson $json) {
+			$r = new Response();
+			$r->headers->add(array('Content-Type'=>'application/json'));
+			$r->setStatusCode(200,'OK');
+			$r->setContent($this->get('serializer')->serialize($json,'json',$this->getSerializerContext($json)));
+			 
+			return $r;
+		}
+		
+		private function getSerializerContext(ExtJsJson $json) {
+			$arGroups = $json->getSerializerGroups();
+			if(count($arGroups) > 0) {
+				$context = SerializationContext::create()->setGroups($json->getSerializerGroups());
+		
+				return $context;
+			}
+			 
+			return null;
 		}
 }
 ?>
