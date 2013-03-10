@@ -6,6 +6,7 @@ use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface, FOS\RestBundle\View\View;
 use Symfony\Component\Locale\Locale;
+use JMS\Serializer\SerializationContext;
 
 class ExtJsController 
 {
@@ -92,17 +93,25 @@ class ExtJsController
 			$user->setRoles($arRoles);
 		}
 		
+		
+		
 		$serializer = $this->container->get('serializer');
-		$serializer->setGroups(array('userBaseInfo','userRolesInfo'));
+		i
 		
 		$view = new View();
 		$view->setTemplate('WebitExtJsBundle::securitycontext.js.twig');
 		$arSecurityConfig = $this->container->getParameter('webit_ext_js.security');
-		$view->setData(array('user'=>$serializer->serialize($user,'json'),'model'=>$arSecurityConfig['model']));
+		$view->setData(array('user'=>$serializer->serialize($user,'json',$this->getSerializerContext()),'model'=>$arSecurityConfig['model']));
 		$view->setHeader('Content-Type', 'application/javascript');
 		
 
 		return $this->viewHandler->handle($view);
+	}
+	
+	private function getSerializerContext() {
+		$arGroups = array('userBaseInfo','userRolesInfo');
+		$context = SerializationContext::create()->setGroups($arGroups);
+		return $context;
 	}
 }
 ?>
