@@ -93,11 +93,8 @@ class ExtJsController
 			$user->setRoles($arRoles);
 		}
 		
-		
-		
 		$serializer = $this->container->get('serializer');
-		i
-		
+
 		$view = new View();
 		$view->setTemplate('WebitExtJsBundle::securitycontext.js.twig');
 		$arSecurityConfig = $this->container->getParameter('webit_ext_js.security');
