@@ -74,9 +74,9 @@ Ext.define('Webit.controller.EditableGrid',{
 		
 		var r = form.getRecord();
 		var phantom = r.phantom;
-		console.info('up');
+
 		form.updateRecord(r);
-		console.info('postup');
+
 		win.getEl().mask('Zapisywanie...');
 		
 		r.save({
@@ -201,15 +201,19 @@ Ext.define('Webit.controller.EditableGrid',{
 		
 		Ext.Msg.confirm(btn.confirmTitle,btn.confirmMsg,function(btnId) {
 			if(btnId == 'yes') {
-				sel[0].destroy({
-					callback: function(r, response) {
-						if(response.success) {
-							performRemove(sel[0]);
-						} else {
-							Ext.Msg.alert('Usuwanie elementu','Wystąpił błąd podczasu próby usunięcia elementu.');
+				if(grid.getStore().getProxy().type == 'memory') {
+					performRemove(sel[0]);
+				} else {
+					sel[0].destroy({
+						callback: function(r, response) {
+							if(response.success) {
+								performRemove(sel[0]);
+							} else {
+								Ext.Msg.alert('Usuwanie elementu','Wystąpił błąd podczasu próby usunięcia elementu.');
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 		})
 	}

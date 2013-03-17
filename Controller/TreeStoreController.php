@@ -28,11 +28,13 @@ class TreeStoreController extends FOSRestController {
 		/**
 		 * Returns children of given node
 		 * @FOS\QueryParam(name="id", description="Page of the overview.")
+		 * @FOS\QueryParam(name="node", default="root",description="Page of the overview.")
 		 * @FOS\Route("/tree/load")
 		 *
 		 * @param ParamFetcher $paramFetcher
 		 */
 		public function loadNodeAction(ParamFetcher $paramFetcher) {
+			
 			$json = $this->getStore()->loadNode($paramFetcher->get('id'));
 			
 			$r = $this->createResponse($json);
@@ -42,10 +44,11 @@ class TreeStoreController extends FOSRestController {
 		/**
 		 * Return node's data
 		 * @FOS\QueryParam(name="id", description="Page of the overview.")
+		 * @FOS\QueryParam(name="node", default="root",description="Page of the overview.")
 		 * @FOS\Route("/tree/node-data")
 		 */
 		public function getNodeAction(ParamFetcher $paramFetcher) {
-			$json = $this->getStore()->loadNode($paramFetcher->get('id'));
+			$json = $this->getStore()->loadNode($paramFetcher->get('node'));
 			
 			$r = $this->createResponse($json);
 			return $r;

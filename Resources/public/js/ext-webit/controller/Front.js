@@ -8,6 +8,6 @@ Ext.define('Webit.controller.Front',{
 		'Webit.view.form.ClearableField'
 	],
 	init: function() {
-		this.getController('Webit.controller.EditableGrid').init();	
+		this.getController('Webit.controller.EditableGrid');
 	}
 });

@@ -114,6 +114,10 @@ class QueryBuilderDecorator {
 	protected function applyStringFilter($property, FilterInterface $filter) {
 		$qb = $this->qb;
 		$value = (string)$filter->getValue();
+		if(empty($value)) {
+			return;
+		}
+		
 		$value = $this->getStringValueExpression($filter->getParams(), $value);
 		
 		$cs = $filter->getParams()->getCaseSensitive();

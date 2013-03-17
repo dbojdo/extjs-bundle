@@ -127,6 +127,11 @@ class QueryBuilderDecorator {
 	}
 	
 	public function applyStringFilter($arFields, FilterInterface $filter) {
+		$value = $filter->getValue();
+		if(empty($value)) {
+			return;
+		}
+		
 		$qb = $this->qb;
 		$qf = $this->qf;
 		
