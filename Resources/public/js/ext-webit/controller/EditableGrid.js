@@ -15,6 +15,11 @@ Ext.define('Webit.controller.EditableGrid',{
 					}
 				}
 			},
+			'webit_grid_editablegrid button[itemId="refresh"]' : {
+				click: function(btn) {
+					btn.up('grid').getStore().reload();
+				}
+			},
 			'webit_grid_editablegrid[editmode="window"]' : {
 				// set grid toolbar's buttons' handlers
 				afterrender: function(grid) {
@@ -118,8 +123,10 @@ Ext.define('Webit.controller.EditableGrid',{
 		win.show();
 		
 		var r = Ext.create(win.getModel(),grid.getModelDefaults());
-		var form = win.down('form').getForm();
-		form.loadRecord(r);
+		var form = win.down('form')
+		if(form) {
+			form.getForm().loadRecord(r);	
+		}
 	},
 	onWindowEdit: function(btn) {
 		var grid = btn.up('grid');
