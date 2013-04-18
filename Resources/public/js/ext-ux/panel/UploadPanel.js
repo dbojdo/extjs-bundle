@@ -311,7 +311,7 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 
 		if (this.multipart_params) {
 			this.uploader.settings.multipart_params = this.multipart_params;
-			this.uploader.settings.multipart_params.id = Earsip.berkas.tree.id;
+			//this.uploader.settings.multipart_params.id = Earsip.berkas.tree.id;
 		}
 		this.uploader.start();
 	}
