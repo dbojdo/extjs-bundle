@@ -30,7 +30,7 @@ class Time extends Numeric {
 	/**
 	 *
 	 * @var string
-	 * @JMS\Type("string")
+	 * @JMS\Type("array")
 	 * @JMS\SerializedName("fields")
 	 * @JMS\Groups({"chartInfo"})
 	 */
