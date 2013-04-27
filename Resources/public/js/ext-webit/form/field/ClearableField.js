@@ -8,9 +8,14 @@ Ext.define('Webit.form.field.ClearableField',{
 	defaults: {
 		flex: 1
 	},
+	readOnly: false,
 	initComponent: function() {
 		var items = this.items || [];
 		if(items.length > 0 && items[items.length - 1].xtype != 'button') {
+			Ext.apply(items[0],{
+				readOnly: this.readOnly
+			});
+			
 			items.push({
 				xtype: 'button',
 				text: 'x',
@@ -18,6 +23,7 @@ Ext.define('Webit.form.field.ClearableField',{
 				flex: null,
 				disabled: true,
 				tooltip: 'Wyczyść',
+				hidden: this.readOnly,
 				handler: function(btn) {
 					var field = btn.prev('field');
 					if(Ext.isFunction(field.clearValue)) {

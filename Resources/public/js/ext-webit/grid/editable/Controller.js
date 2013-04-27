@@ -105,6 +105,11 @@ Ext.define('Webit.grid.editable.Controller',{
 		
 		var r = Ext.create(win.getModel(),grid.getModelDefaults());
 		var form = win.down('form').getForm();
+		Ext.each(win.down('form').query('combo'),function(combo) {
+			if(r.fields.containsKey(combo.getItemId())) {
+				combo.getStore().insert(0,r.get(combo.getItemId()));	
+			}
+		});
 		form.loadRecord(r);
 	},
 	onWindowEdit: function(btn) {

@@ -106,7 +106,7 @@ class ExtJsController
 	}
 	
 	private function getSerializerContext() {
-		$arGroups = array('userBaseInfo','userRolesInfo');
+		$arGroups = array('Default','userBaseInfo','userRolesInfo');
 		$context = SerializationContext::create()->setGroups($arGroups);
 		return $context;
 	}
