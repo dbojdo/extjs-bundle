@@ -307,7 +307,9 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 
 	,
 	onStart : function() {
-		this.fireEvent('beforestart', this);
+		if(this.fireEvent('beforestart', this) == false) {
+			return false;
+		}
 
 		if (this.multipart_params) {
 			this.uploader.settings.multipart_params = this.multipart_params;
