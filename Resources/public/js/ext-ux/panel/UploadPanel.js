@@ -517,10 +517,14 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 	PluploadStateChanged : function(uploader) {
 		if (uploader.state == 2) {
 			this.fireEvent('uploadstarted', this);
-			this.getTopToolbar().getComponent('cancel').setDisabled(false);
+			if(this.getTopToolbar()) {
+				this.getTopToolbar().getComponent('cancel').setDisabled(false);
+			}
 		} else {
 			this.fireEvent('uploadcomplete', this, this.success, this.failed);
-			this.getTopToolbar().getComponent('cancel').setDisabled(true);
+			if(this.getTopToolbar()) {
+				this.getTopToolbar().getComponent('cancel').setDisabled(true);	
+			}
 		}
 	}
 

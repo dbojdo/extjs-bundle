@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
         	->children()
         		->arrayNode('download_url')
         			->defaultValue(array(
+        					'4.2.1' => 'http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip',
         					'4.2.0' => 'http://cdn.sencha.com/ext/gpl/ext-4.2.0-gpl.zip',
         					'4.1.1' => 'http://cdn.sencha.io/ext-4.1.1-gpl.zip',
         					'3.4.0' => 'http://extjs.cachefly.net/ext-3.4.0.zip',
@@ -35,7 +36,7 @@ class Configuration implements ConfigurationInterface
         			->scalarNode('model')->defaultValue('Webit.security.User')->end()
         		->end()
         	->end()
-					->scalarNode('version')->defaultValue('4.2.0')->end()
+					->scalarNode('version')->defaultValue('4.2.1')->end()
         	->scalarNode('js_root_dir')->defaultValue('/js')->end()
         ->end();
 
