@@ -73,7 +73,7 @@ Ext.define('Webit.override.form.Basic', {
 	                    if (hasValues) {
 	                        obj[name] = populateObj(Ext.create(field.model), nestedValues);
 	                    }
-	                } else if (name in values) {
+	                } else if (Ext.isDefined(values[name])) {
 	                    obj[name] = values[name];
 	                }
 	            });
