@@ -90,7 +90,7 @@ class ExtJsJson implements ExtJsJsonInterface {
 	}
 	
 	public function getMiscData() {
-		return $this->miscData;
+		return $this->misc;
 	}
 	
 	public function setSerializerGroups(array $groups) {
