@@ -7,7 +7,8 @@ parameters:
   webit_ext_js.extjs_subclass_name_generator.class: Webit\Bundle\ExtJsBundle\Service\ExtJsSubclassNameGenerator
   webit_ext_js.extjs_app_name_generator.class: Webit\Bundle\ExtJsBundle\Service\ExtJsAppNameGenerator
   webit_ext_js.extjs_document_classes_provider.class: Webit\Bundle\ExtJsBundle\Service\ExtJsDocumentClassesProvider
-
+  webit_ext_js.static_data_exposer.class: Webit\Bundle\ExtJsBundle\StaticData\StaticDataExposer
+  
 services:
   webit_ext_js.tree_store_abstract:
     class: %webit_ext_js.tree_store_abstract.class%
@@ -27,9 +28,13 @@ services:
     class: %webit_ext_js.controller_tree_store.class%
     calls:
         - [ setContainer, [ @service_container ] ]
+  webit_ext_js.static_data_exposer:
+    class: %webit_ext_js.static_data_exposer.class%
   webit_ext_js.controller.extjs:
     class: %webit_ext_js.controller.extjs.class%
-    arguments: [@service_container,@fos_rest.view_handler]
+    arguments: [@fos_rest.view_handler]
+    calls:
+        - [ setContainer, [ @service_container ] ]
   webit_ext_js.ext_js_subclass_name_generator:
     class: %webit_ext_js.extjs_subclass_name_generator.class%
   webit_ext_js.extjs_app_name_generator:

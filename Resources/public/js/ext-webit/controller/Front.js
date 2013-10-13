@@ -1,7 +1,8 @@
 Ext.define('Webit.controller.Front',{
 	extend: 'Ext.app.Controller',
 	requires: [
-		'Webit.Overrides'
+		'Webit.Overrides',
+		'Webit.data.StaticData'
 	],
 	views: [
 		'Webit.view.button.DeleteButton',

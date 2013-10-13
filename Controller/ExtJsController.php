@@ -7,20 +7,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface, FOS\RestBundle\View\View;
 use Symfony\Component\Locale\Locale;
 use JMS\Serializer\SerializationContext;
+use Webit\Bundle\ExtJsBundle\Store\ExtJsJson;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ExtJsController 
+class ExtJsController extends Controller 
 {
 	/**
 	 * 
 	 * @var ViewHandlerInterface
 	 */
 	protected $viewHandler;
-	
-	/**
-	 * 
-	 * @var ContainerInterface
-	 */
-	protected $container;
 	
 	/**
 	 * Create the Vie Controller
@@ -32,10 +29,9 @@ class ExtJsController
 	 * @param ViewHandlerInterface $viewHandler view handler
 	 * @param Boolean $useCoffee whether assetic is set up to use coffee script
 	 */
-	public function __construct(ContainerInterface $container, ViewHandlerInterface $viewHandler)
+	public function __construct(ViewHandlerInterface $viewHandler)
 	{
 		$this->viewHandler = $viewHandler;
-		$this->container = $container;
 	}
 	
 	/**
@@ -109,6 +105,22 @@ class ExtJsController
 		$arGroups = array('Default','userBaseInfo','userRolesInfo');
 		$context = SerializationContext::create()->setGroups($arGroups);
 		return $context;
+	}
+	
+	public function exposeStaticDataAction() {
+		$data = $this->container->get('webit_ext_js.static_data_exposer')->getExposedData();
+		$json = new ExtJsJson();
+			$json->setData($data);
+			$json->setSerializerGroups(array('Default','generic','static_data_exposer'));
+		
+		$context = SerializationContext::create()->setGroups($json->getSerializerGroups());
+		
+		$r = new Response();
+		$r->headers->add(array('Content-Type'=>'application/json'));
+		$r->setStatusCode(200,'OK');
+		$r->setContent($this->get('serializer')->serialize($json,'json',$context));
+		
+		return $r;
 	}
 }
 ?>

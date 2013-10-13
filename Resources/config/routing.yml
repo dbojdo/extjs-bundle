@@ -2,6 +2,12 @@ webit_extjs_security_context:
     pattern:   /get-security-context
     defaults:  { _controller: webit_ext_js.controller.extjs:getSecurityContextAction, _format: javascript  }
 
+webit_extjs_expose_static_data:
+    pattern:   /expose-static-data
+    defaults:  { _controller: webit_ext_js.controller.extjs:exposeStaticDataAction }
+    options:
+        expose: true
+        
 WebitExtJsBundle_store:
     type: rest
     resource: webit_ext_js.controller_store
