@@ -65,6 +65,7 @@ Ext.define('Webit.grid.editable.Controller',{
 		var phantom = r.phantom;
 		
 		form.updateRecord(r);
+		win.fireEvent('beforeRecordSave', win, r);
 		win.getEl().mask('Zapisywanie...');
 		r.save({
 			callback: function(record, response) {
@@ -111,6 +112,7 @@ Ext.define('Webit.grid.editable.Controller',{
 			}
 		});
 		form.loadRecord(r);
+		win.fireEvent('recordLoad',win, r);
 	},
 	onWindowEdit: function(btn) {
 		var grid = btn.up('grid');
@@ -139,6 +141,7 @@ Ext.define('Webit.grid.editable.Controller',{
 					});
 				
 					form.loadRecord(r);
+					win.fireEvent('recordLoad',win, r);
 				} else {
 					Ext.Msg.alert('Ładowanie danych','Wystąpił błąd podczas ładowania danych.');
 					win.close();
