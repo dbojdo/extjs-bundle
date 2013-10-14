@@ -25,7 +25,12 @@ class InstallCommand extends ContainerAwareCommand {
 	}
 	
 	private function getAssetDir() {
-		return $this->getContainer()->getParameter('kernel.root_dir').'/../web/js';
+		$dir = $this->getContainer()->getParameter('kernel.root_dir').'/../web/js';
+		if(is_dir($dir) == false) {
+			@mkdir($dir);
+		}
+		
+		return $dir;
 	}
 	
 	protected function initialize(InputInterface $input, OutputInterface $output) {
