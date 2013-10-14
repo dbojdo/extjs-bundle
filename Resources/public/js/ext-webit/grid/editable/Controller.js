@@ -65,6 +65,7 @@ Ext.define('Webit.grid.editable.Controller',{
 		var phantom = r.phantom;
 		
 		form.updateRecord(r);
+		
 		win.fireEvent('beforeRecordSave', win, r);
 		win.getEl().mask('Zapisywanie...');
 		r.save({
@@ -190,6 +191,7 @@ Ext.define('Webit.grid.editable.Controller',{
 			grid.getStore().remove(r);
 			grid.getStore().commitChanges();
 			grid.getStore().resumeAutoSync();
+			
 		};
 		
 		if(sel[0].phantom == true) {

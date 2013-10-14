@@ -83,7 +83,7 @@ Ext.define('Webit.controller.EditableGrid',{
 		form.updateRecord(r);
 
 		win.getEl().mask('Zapisywanie...');
-		
+		win.fireEvent('beforeRecordSave', win, r);
 		r.save({
 			callback: function(record, response) {
 				win.getEl().unmask();
@@ -126,6 +126,7 @@ Ext.define('Webit.controller.EditableGrid',{
 		var form = win.down('form')
 		if(form) {
 			form.getForm().loadRecord(r);	
+			win.fireEvent('recordLoad',win, r);
 		}
 	},
 	onWindowEdit: function(btn) {
@@ -150,6 +151,7 @@ Ext.define('Webit.controller.EditableGrid',{
 					r = r || sel[0];
 					
 					form.loadRecord(r);
+					win.fireEvent('recordLoad',win, r);
 				} else {
 					Ext.Msg.alert('Ładowanie danych','Wystąpił błąd podczas ładowania danych.');
 					win.close();
@@ -198,6 +200,7 @@ Ext.define('Webit.controller.EditableGrid',{
 			grid.getStore().remove(r);
 			grid.getStore().commitChanges();
 			grid.getStore().resumeAutoSync();
+			grid.fireEvent('recordDelete',grid,r,r.phantom);
 		};
 		
 		if(sel[0].phantom == true) {
