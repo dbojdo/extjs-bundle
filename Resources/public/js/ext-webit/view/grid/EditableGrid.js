@@ -25,11 +25,11 @@ Ext.define('Webit.view.grid.EditableGrid',{
 		dock: 'right',
 		itemId: 'edit',
 		items: [{
-			text: '+',
 			itemId: 'add',
+			iconCls: 'fam-silk-add',
 			tooltip: 'Dodaj'
 		},{
-			text: 'e',
+			iconCls: 'fam-silk-pencil',
 			itemId: 'edit',
 			tooltip: 'Edytuj',
 			disabled: true
@@ -37,7 +37,7 @@ Ext.define('Webit.view.grid.EditableGrid',{
 			xtype: 'webit_button_deletebutton',
 			disabled: true
 		},{
-			text: 'r',
+			iconCls: 'fam-silk-arrow_refresh',
 			itemId: 'refresh',
 			tooltip: 'Odśwież',
 			hidden: true

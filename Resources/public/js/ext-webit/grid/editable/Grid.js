@@ -27,11 +27,11 @@ Ext.define('Webit.grid.editable.Grid',{
 		dock: 'right',
 		itemId: 'edit',
 		items: [{
-			text: '+',
+			iconCls: 'fam-silk-add',
 			itemId: 'add',
 			tooltip: 'Dodaj'
 		},{
-			text: 'e',
+			iconCls: 'fam-silk-pencil',
 			itemId: 'edit',
 			tooltip: 'Edytuj',
 			disabled: true

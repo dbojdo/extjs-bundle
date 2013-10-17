@@ -13,8 +13,8 @@ Ext.define('Webit.view.form.ClearableField',{
 		if(items.length > 0 && items[items.length - 1].xtype != 'button') {
 			items.push({
 				xtype: 'button',
-				text: 'x',
-				width: 21,
+				iconCls: 'fam-silk-cross',
+				width: 22,
 				flex: null,
 				disabled: true,
 				tooltip: 'Wyczyść',

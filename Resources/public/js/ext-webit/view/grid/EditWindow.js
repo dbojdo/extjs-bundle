@@ -20,10 +20,12 @@ Ext.define('Webit.view.grid.EditWindow',{
 	model: null,
 	bbar: ['->',{
 		text: 'Zapisz',
-		itemId: 'save'
+		itemId: 'save',
+		iconCls: 'fam-silk-tick'
 	},{
 		text: 'Anuluj',
 		itemId: 'cancel',
+		iconCls: 'fam-silk-cross',
 		handler: function(btn) {
 			btn.up('window').close();
 		}
