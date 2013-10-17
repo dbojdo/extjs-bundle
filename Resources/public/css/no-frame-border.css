@@ -3,3 +3,11 @@
 	border-style: none;
 	border-width: 0px;
 }
+
+span.row-icon {
+	display:block;
+	background-repeat: no-repeat;
+	float: left;
+	width: 22px;
+	height: 16px;
+}
