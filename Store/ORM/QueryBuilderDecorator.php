@@ -180,13 +180,13 @@ class QueryBuilderDecorator {
 	protected function applyListFilter($property, FilterInterface $filter) {
 		$qb = $this->qb;
 		$arValue = explode(',',$filter->getValue());
-		
+
 		$arCond = array();
 		foreach($property as $f) {
-			$arCond[] = $qb->expr()->in($property,$arValue);
+			$arCond[] = $qb->expr()->in($f,$arValue);
 		}
 		
-		$qb->andWhere($qb->expr()->orx($arCond));
+		$qb->andWhere(call_user_func_array(array($qb->expr(),'orx'), $arCond));
 	}
 	
 	/**
