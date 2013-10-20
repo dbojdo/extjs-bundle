@@ -15,5 +15,11 @@ interface FilterParamsInterface {
 	public function getCaseSensitive();
 	public function getLikeWildcard();
 	public function getNegation();
+	
+	public function setCaseSensitive($caseSensitive);
+	
+	public function setLikeWildcard($likeWildcard);
+	
+	public function setNegation($negation);
 }
 ?>

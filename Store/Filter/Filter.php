@@ -117,6 +117,10 @@ class Filter implements FilterInterface {
 	 * @see Webit\Bundle\ExtJsBundle\Store\Filter\FilterInterface::getParams()
 	 */
 	public function getParams() {
-		return $this->params ?: new FilterParams();
+		if($this->params == null) {
+			$this->params = new FilterParams();
+		}
+		
+		return $this->params;
 	}
 }

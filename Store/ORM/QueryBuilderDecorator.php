@@ -267,7 +267,6 @@ class QueryBuilderDecorator {
 				break;
 		}
 		$value = $cs ? $value : mb_strtolower($value);
-		
 		return $this->qb->expr()->literal($value);
 	}
 	

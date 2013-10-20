@@ -36,5 +36,17 @@ class FilterParams implements FilterParamsInterface {
 	public function getNegation() {
 		return $this->params['negation'];
 	}
+	
+	public function setCaseSensitive($caseSensitive) {
+		$this->params['case_sensitive'] = (bool) $caseSensitive;
+	}
+	
+	public function setLikeWildcard($likeWildcard) {
+		$this->params['like_wildcard'] = $likeWildcard;
+	}
+	
+	public function setNegation($negation) {
+		$this->params['negation'] = (bool) $negation;
+	}
 }
 ?>
