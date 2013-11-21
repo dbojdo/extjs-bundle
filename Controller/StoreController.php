@@ -193,14 +193,18 @@ class StoreController extends FOSRestController {
     }
     
     private function getSerializerContext(ExtJsJson $json) {
+    	$context = SerializationContext::create();
+    	
     	$arGroups = $json->getSerializerGroups();
     	if(count($arGroups) > 0) {
-    		$context = SerializationContext::create()->setGroups($json->getSerializerGroups());
-    		
-    		return $context;
+    		$context->setGroups($json->getSerializerGroups());
     	}
     	
-    	return null;
+    	foreach($json->getContextData() as $key=>$value) {
+    		$context->setAttribute($key, $value);
+    	}
+
+    	return $context;
     }
 }
 ?>

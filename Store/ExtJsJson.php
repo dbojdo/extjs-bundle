@@ -53,6 +53,13 @@ class ExtJsJson implements ExtJsJsonInterface {
 	 */
 	protected $serializerGroups = array('extjsResponse');
 	
+	/**
+	 * 
+	 * @var array
+	 * @JMS\Exclude
+	 */
+	protected $contextData = array();
+	
 	public function setData($data) {
 		$this->data = $data;
 	}
@@ -107,6 +114,29 @@ class ExtJsJson implements ExtJsJsonInterface {
 		}
 
 		return $this->serializerGroups;
+	}
+
+	/**
+	 * @return the array
+	 */
+	public function getContextData() {
+		return $this->contextData;
+	}
+	
+	/**
+	 * @param array $contextData
+	 */
+	public function setContextData(array $contextData) {
+		$this->contextData = $contextData;
+	}
+	
+	/**
+	 * 
+	 * @param string $key
+	 * @param mixed $value
+	 */
+	public function addContextData($key, $value) {
+		$this->contextData[$key] = $value;
 	}
 }
 ?>
