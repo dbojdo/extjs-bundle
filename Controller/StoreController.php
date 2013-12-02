@@ -57,11 +57,13 @@ class StoreController extends FOSRestController {
      *  
      *  @param ParamFetcher $paramFetcher
      */
-    public function getItemsAction(ParamFetcher $paramFetcher) {    	
-    	$filters = $this->container->get('serializer')->deserialize($paramFetcher->get('filter'),'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Filter\Filter>','json');
+    public function getItemsAction(ParamFetcher $paramFetcher) {
+    	$f = urldecode($paramFetcher->get('filter'));	
+    	$filters = $this->container->get('serializer')->deserialize($f,'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Filter\Filter>','json');
     	$filters = new \Webit\Bundle\ExtJsBundle\Store\Filter\FilterCollection($filters);
-    	
-    	$sort = $this->container->get('serializer')->deserialize($paramFetcher->get('sort'),'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Sorter\Sorter>','json');
+
+    	$s = urldecode($paramFetcher->get('sort'));
+    	$sort = $this->container->get('serializer')->deserialize($s,'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Sorter\Sorter>','json');
     	$sort = new \Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection($sort);
     	
     	$json = $this->getStore()->getModelList($this->getRequest()->query, $filters, $sort, $paramFetcher->get('page'), $paramFetcher->get('limit'), $paramFetcher->get('start'));
