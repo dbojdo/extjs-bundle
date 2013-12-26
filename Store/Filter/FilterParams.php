@@ -26,15 +26,15 @@ class FilterParams implements FilterParamsInterface {
 	}
 	
 	public function getCaseSensitive() {
-		return $this->params['case_sensitive'];
+		return isset($this->params['case_sensitive']) ? $this->params['case_sensitive'] : false;
 	}
 	
 	public function getLikeWildcard() {
-		return $this->params['like_wildcard'];
+		return isset($this->params['like_wildcard']) ? $this->params['like_wildcard'] : FilterParamsInterface::LIKE_WILDCARD_NONE;
 	}
 	
 	public function getNegation() {
-		return $this->params['negation'];
+		return isset($this->params['negation']) ? $this->params['negation'] : false;
 	}
 	
 	public function setCaseSensitive($caseSensitive) {
