@@ -1,2 +1,6 @@
-<script type="text/javascript" src="/js/extjs-{{ version }}/ext-debug.js"></script>
+{% if app.environment == 'prod' %}
+<script type="text/javascript" src="/js/extjs-{{ version }}/ext-all.js"></script>
+{% else %}
+<script type="text/javascript" src="/js/extjs-{{ version }}/ext-all-debug.js"></script>
+{% endif %}
 <script type="text/javascript" src="/js/extjs-{{ version }}/locale/ext-lang-{{ app.request.locale }}.js"></script>
