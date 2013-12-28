@@ -9,6 +9,8 @@ interface FilterInterface {
 	const COMPARISION_GREATER_OR_EQUAL = 'gte';
 	const COMPARISION_LESS_OR_EQUAL = 'lte';
 	
+	const COMPARISION_NULL = 'null';
+	
 	const COMPARISION_DESCENDANT = 'desc';
 	const COMPARISION_CHILD = 'child';
 	const COMPARISION_DESCENDANT_OR_EQUAL = 'desce';
