@@ -37,6 +37,12 @@ class QueryBuilderDecorator {
 		foreach($filterCollection as $filter) {
 			$property = $filter->getProperty();
 			$property = $this->getQueryProperty($property);
+			
+			if($filter->getComparision() == FilterInterface::COMPARISION_NULL) {
+			    $this->applyNullComparision($property, $filter);
+			    continue;
+			}
+			
 			switch($filter->getType()) {
 				case FilterInterface::TYPE_STRING:
 					$this->applyStringFilter($property, $filter);
@@ -58,6 +64,23 @@ class QueryBuilderDecorator {
 		}
 		
 		return $this;
+	}
+	
+	private function applyNullComparision($property, FilterInterface $filter) {
+	    $qb = $this->qb;
+	    
+	    $arCond = array();
+	    foreach($property as $f) {
+	        if($filter->getParams()->getNegation()) {
+	            $arCond[] = $qb->expr()->isNotNull($f);
+	        } else {
+	            $arCond[] = $qb->expr()->isNull($f);
+	        }
+	    }
+	    
+	    if(count($arCond) > 0) {
+	        $this->qb->andWhere(call_user_func_array(array($qb->expr(),'orx'), $arCond));
+	    }
 	}
 	
 	protected function applyDateFilter($property, FilterInterface $filter) {
@@ -117,16 +140,18 @@ class QueryBuilderDecorator {
 		if(empty($value)) {
 			return;
 		}
+
+		$arCond = array();
 		
 		$value = $this->getStringValueExpression($filter->getParams(), $value);
 		
 		$cs = $filter->getParams()->getCaseSensitive();
-		$arCond = array();
+		
 		foreach($property as $f) {
 			$cond = $qb->expr()->like(($cs ? $f : $qb->expr()->lower($f)),$value);
 			$arCond[] = $filter->getParams()->getNegation() ? $qb->expr()->not($cond) : $cond;
 		}
-		
+
 		if(count($arCond) > 0) {
 			$this->qb->andWhere(call_user_func_array(array($qb->expr(),'orx'), $arCond));
 		}
