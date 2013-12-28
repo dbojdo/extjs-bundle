@@ -54,7 +54,7 @@ Ext.define('Ext.ux.grid.feature.Searching', {
 	/**
 	 * @cfg {String} iconCls Icon class for menu button (defaults to icon-magnifier)
 	 */
-	iconCls:'icon-magnifier',
+	iconCls:'fam-silk-magnifier',
 
 	/**
 	 * @cfg {String/Array} checkIndexes Which indexes to check by default. Can be either 'all' for all indexes
@@ -142,15 +142,16 @@ Ext.define('Ext.ux.grid.feature.Searching', {
 	 */
 			
 	attachEvents: function() {
-		this.grid = this.view.up('gridpanel');
 		if(this.grid.rendered)
 			this.onRender();
 		else
 			this.grid.on('render', this.onRender, this);
 	},	
-	
+	init: function(grid) {
+		this.grid = grid;
+		this.attachEvents();
+	},
 	onRender:function() {
-				
 		var panel = this.toolbarContainer || this.grid;
 		var tb = 'bottom' === this.position ? panel.getDockedItems('toolbar[dock="bottom"]') : panel.getDockedItems('toolbar[dock="top"]');
 		if(tb.length > 0)
@@ -183,17 +184,17 @@ Ext.define('Ext.ux.grid.feature.Searching', {
 		// add input field (TwinTriggerField in fact)
 		this.field = Ext.create('Ext.form.TwinTriggerField', {
 			width:this.width,
-			qtip: 'ddd',
+			qtip: 'Search...',
 			selectOnFocus:undefined === this.selectOnFocus ? true : this.selectOnFocus,
 			trigger1Cls:'x-form-clear-trigger',
-			trigger2Cls:this.minChars ? 'x-hidden' : 'x-form-search-trigger',
+			trigger2Cls: this.minChars ? 'x-hidden' : 'x-form-search-trigger',
 			onTrigger1Click: Ext.bind(this.onTriggerClear, this),
 			onTrigger2Click: this.minChars ? Ext.emptyFn : Ext.bind(this.onTriggerSearch, this),
 			minLength:this.minLength
 		});
 		
 		// install event handlers on input field
-		this.field.on('render', function() {
+		this.field.on('render', function(field) {
 			
 			var qtip = this.minChars ? Ext.String.format(this.minCharsTipText, this.minChars) : this.searchTipText;
 			Ext.QuickTips.register({
@@ -216,6 +217,9 @@ Ext.define('Ext.ux.grid.feature.Searching', {
 				,fn:this.onTriggerClear
 			}]);
 			map.stopEvent = true;
+			if(this.minChars) {
+				this.field.triggerEl.item(1).parent().setDisplayed('none');
+			}
 		}, this, {single:true});
 
 		tb.add(this.field);
