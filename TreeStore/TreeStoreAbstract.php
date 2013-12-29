@@ -42,5 +42,15 @@ abstract class TreeStoreAbstract extends ContainerAware implements TreeStoreInte
 	}
 	
 	abstract protected function fetchNode($id);
+	
+	/**
+	 *
+	 * @param string $node
+	 * @param string $targetNode
+	 * @param string $position
+	 */
+	public function moveNode($node, $targetNode, $position) {
+		throw new \RuntimeException('Moving is not supported by this store.');
+	}
 }
 ?>
