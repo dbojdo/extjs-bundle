@@ -95,6 +95,7 @@ class StoreController extends FOSRestController {
      */
     public function putItemsAction() {
     	$root = $this->getStore()->getOption('writer.root');
+    	
     	$items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent(); 
 
     	$dataClass = $this->getStore()->getDataClass();
