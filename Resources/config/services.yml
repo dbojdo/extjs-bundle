@@ -1,5 +1,6 @@
 parameters:
   webit_ext_js.tree_store_abstract.class: Webit\Bundle\ExtJsBundle\TreeStore\TreeStoreAbstract
+  webit_ext_js.entity_store.class: Webit\Bundle\ExtJsBundle\Store\EntityStore
   webit_ext_js.store_abstract.class: Webit\Bundle\ExtJsBundle\Store\StoreAbstract
   webit_ext_js.controller.extjs.class: Webit\Bundle\ExtJsBundle\Controller\ExtJsController
   webit_ext_js.controller_store.class: Webit\Bundle\ExtJsBundle\Controller\StoreController
@@ -42,3 +43,7 @@ services:
   webit_ext_js.extjs_document_classes_provider:
     class: %webit_ext_js.extjs_document_classes_provider.class%
     arguments: [@webit_ext_js.ext_js_subclass_name_generator]
+  webit_ext_js.entity_store:
+    class: %webit_ext_js.entity_store.class%
+    arguments: [{},@doctrine.orm.entity_manager]
+    abstract: true
