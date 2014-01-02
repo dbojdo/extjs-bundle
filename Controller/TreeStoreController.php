@@ -67,15 +67,18 @@ class TreeStoreController extends FOSRestController {
 		}
 		
 		/**
-		 * Return node's data
+		 * Move node action
 		 * @FOS\QueryParam(name="id", description="Page of the overview.")
 		 * @FOS\Route("/tree/node")
 		 */
 		public function putNodeAction() {
 			$store = $this->getStore();
-			$arNodes = $this->get('serializer')->deserialize($this->getRequest()->getContent(),$store->getDataClass());
+			$moveAction = $this->get('serializer')->deserialize($this->getRequest()->getContent(),'Webit\Bundle\ExtJsBundle\TreeStore\TreeNodeMoveAction','json');
 			
-			//$json = $this->getStore()->createNodes();
+			$json = $this->getStore()->moveNode($moveAction->getItem(), $moveAction->getTargetItem(), $moveAction->getPosition());
+			
+			$r = $this->createResponse($json);
+			return $r;
 		}
 		
 		/**
