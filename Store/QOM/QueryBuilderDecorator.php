@@ -7,6 +7,7 @@ use Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection;
 use Webit\Bundle\ExtJsBundle\Store\Filter\FilterCollection;
 use PHPCR\Util\QOM\QueryBuilder;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
+use Webit\Bundle\ExtJsBundle\Store\Filter\FilterParams;
 
 class QueryBuilderDecorator {
 	/**
@@ -137,7 +138,8 @@ class QueryBuilderDecorator {
 		
 		$constraint = null;
 		foreach($arFields as $qField) {
-			$c = $qf->comparison($qf->propertyValue($qField->getName(),$qField->getAlias()), Constants::JCR_OPERATOR_LIKE, $qf->literal($filter->getValue()));
+		    $value = $this->resolveStringValue($filter->getValue(), $filter->getParams());
+			$c = $qf->comparison($qf->propertyValue($qField->getName(),$qField->getAlias()), Constants::JCR_OPERATOR_LIKE, $qf->literal($value));
 			if($constraint) {
 				$constraint = $qf->orConstraint($constraint,$c);
 			} else {
@@ -148,6 +150,23 @@ class QueryBuilderDecorator {
 		if($constraint) {
 			$qb->andWhere($constraint);
 		}
+	}
+	
+	private function resolveStringValue($value, FilterParams $params)
+	{
+	    switch($params->getLikeWildcard()) {
+	    	case FilterParams::LIKE_WILDCARD_LEFT:
+	    	    $value = ('%'.$value);
+	    	    break;
+    	    case FilterParams::LIKE_WILDCARD_RIGHT:
+    	        $value = ($value .'%');
+	           break;
+	        case FilterParams::LIKE_WILDCARD_BOTH:
+	            $value = ('%' . $value . '%');
+	            break;
+	    }
+	    
+	    return $value;
 	}
 	
 	/**
