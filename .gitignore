@@ -1,5 +1,9 @@
+/vendor
 /nbproject/
+/.idea
 /.settings
 /.buildpath
 /.project
 /Resources/public/extjs*
+composer.lock
+

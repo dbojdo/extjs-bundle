@@ -21,16 +21,16 @@
 		"jms/serializer-bundle" : ">=0.12.0@dev"
 	},
 	"autoload" : {
-		"psr-0" : {
-			"Webit\\Bundle\\ExtJsBundle" : ""
+		"psr-4" : {
+			"Webit\\Bundle\\ExtJsBundle\\" : ""
 		}
 	},
-	"target-dir" : "Webit/Bundle/ExtJsBundle",
 	"repositories" : [{
 			"type" : "composer",
 			"url" : "http://packages.web-it.eu"
 		}
 	],
+  	"minimum-stability": "dev",
 	"suggest" : {
 		"vela/icons-bundle" : "Icons used by Bundle"
 	}

@@ -8,4 +8,10 @@ interface SorterCollectionInterface extends \Traversable {
 	 * @return SorterInterface|NULL
 	 */
 	public function getSorter($property);
+
+
+	/**
+	 * @return \Webit\Tools\Data\SorterCollection
+	 */
+	public function toDataSorterCollection();
 }

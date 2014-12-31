@@ -8,4 +8,9 @@ interface FilterCollectionInterface extends \Traversable {
 	 * @return FilterInterface|NULL
 	 */
 	public function getFilter($property);
+
+	/**
+	 * @return \Webit\Tools\Data\FilterCollection
+	 */
+	public function toDataFilterCollection();
 }
