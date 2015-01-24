@@ -4,7 +4,6 @@ namespace Webit\Bundle\ExtJsBundle\Store\Sorter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Webit\Tools\Data\SorterCollection as DataSorterCollection;
 use Webit\Tools\Data\Sorter as DataSorter;
-use Webit\Tools\Data\SorterInterface;
 
 /**
  * 
@@ -34,7 +33,7 @@ class SorterCollection extends ArrayCollection implements SorterCollectionInterf
 	public function toDataSorterCollection()
 	{
 		$collection = new DataSorterCollection();
-		/** @var SorterInterface $sorter */
+		/** @var DataSorter $sorter */
 		foreach ($this as $sorter) {
 			$collection->addSorter(new DataSorter($sorter->getProperty(), $sorter->getDirection()));
 		}
