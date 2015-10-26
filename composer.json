@@ -30,8 +30,14 @@
 			"url" : "http://packages.web-it.eu"
 		}
 	],
+
   	"minimum-stability": "dev",
 	"suggest" : {
 		"vela/icons-bundle" : "Icons used by Bundle"
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.x-dev"
+		}
 	}
 }
