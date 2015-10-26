@@ -27,12 +27,12 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 	pluploadPath : 'app/plupload/' // Path to plupload
 	,
 	pluploadRuntimes : 'html5,gears,browserplus,silverlight,flash,html4' // All
-																			// the
-																			// runtimes
-																			// you
-																			// want
-																			// to
-																			// use
+	// the
+	// runtimes
+	// you
+	// want
+	// to
+	// use
 
 	// Texts (language-dependent)
 	,
@@ -73,36 +73,38 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 		// List of files
 		this.success = [];
 		this.failed = [];
+		this.lastStatus = null;
+		this.lastResponse = null;
 
 		// Column-Headers
 		config.columns = [{
-					header : this.texts.cols[0],
-					flex : 1,
-					dataIndex : 'name'
-				}, {
-					header : this.texts.cols[1],
-					flex : 1,
-					align : 'right',
-					dataIndex : 'size',
-					renderer : Ext.util.Format.fileSize
-				}, {
-					header : this.texts.cols[2],
-					flex : 1,
-					dataIndex : 'status',
-					renderer : this.renderStatus
-				}, {
-					header : this.texts.cols[3],
-					flex : 1,
-					dataIndex : 'msg'
-				}];
+			header : this.texts.cols[0],
+			flex : 1,
+			dataIndex : 'name'
+		}, {
+			header : this.texts.cols[1],
+			flex : 1,
+			align : 'right',
+			dataIndex : 'size',
+			renderer : Ext.util.Format.fileSize
+		}, {
+			header : this.texts.cols[2],
+			flex : 1,
+			dataIndex : 'status',
+			renderer : this.renderStatus
+		}, {
+			header : this.texts.cols[3],
+			flex : 1,
+			dataIndex : 'msg'
+		}];
 
 		// Model and Store
 		if (!Ext.ModelManager.getModel('Plupload')) {
 			Ext.define('Plupload', {
-						extend : 'Ext.data.Model',
-						fields : ['id', 'loaded', 'name', 'size', 'percent',
-								'status', 'msg']
-					});
+				extend : 'Ext.data.Model',
+				fields : ['id', 'loaded', 'name', 'size', 'percent',
+					'status', 'msg']
+			});
 		};
 
 		config.store = {
@@ -121,61 +123,61 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 		this.tbar = {
 			enableOverflow : true,
 			items : [new Ext.Button({
-								text : this.texts.addButtonText,
-								itemId : 'addButton',
-								iconCls : config.addButtonCls
-										|| 'pluploadAddCls',
-								disabled : true
-							}), new Ext.Button({
-								text : this.texts.uploadButtonText,
-								handler : this.onStart,
-								scope : this,
-								disabled : true,
-								itemId : 'upload',
-								iconCls : config.uploadButtonCls
-										|| 'pluploadUploadCls'
-							}), new Ext.Button({
-								text : this.texts.cancelButtonText,
-								handler : this.onCancel,
-								scope : this,
-								disabled : true,
-								itemId : 'cancel',
-								iconCls : config.cancelButtonCls
-										|| 'pluploadCancelCls'
-							}), new Ext.SplitButton({
-						text : this.texts.deleteButtonText,
+				text : this.texts.addButtonText,
+				itemId : 'addButton',
+				iconCls : config.addButtonCls
+				|| 'pluploadAddCls',
+				disabled : true
+			}), new Ext.Button({
+				text : this.texts.uploadButtonText,
+				handler : this.onStart,
+				scope : this,
+				disabled : true,
+				itemId : 'upload',
+				iconCls : config.uploadButtonCls
+				|| 'pluploadUploadCls'
+			}), new Ext.Button({
+				text : this.texts.cancelButtonText,
+				handler : this.onCancel,
+				scope : this,
+				disabled : true,
+				itemId : 'cancel',
+				iconCls : config.cancelButtonCls
+				|| 'pluploadCancelCls'
+			}), new Ext.SplitButton({
+				text : this.texts.deleteButtonText,
+				handler : this.onDeleteSelected,
+				menu : new Ext.menu.Menu({
+					items : [{
+						text : this.texts.deleteUploadedText,
+						handler : this.onDeleteUploaded,
+						scope : this
+					}, '-', {
+						text : this.texts.deleteAllText,
+						handler : this.onDeleteAll,
+						scope : this
+					}, '-', {
+						text : this.texts.deleteSelectedText,
 						handler : this.onDeleteSelected,
-						menu : new Ext.menu.Menu({
-									items : [{
-												text : this.texts.deleteUploadedText,
-												handler : this.onDeleteUploaded,
-												scope : this
-											}, '-', {
-												text : this.texts.deleteAllText,
-												handler : this.onDeleteAll,
-												scope : this
-											}, '-', {
-												text : this.texts.deleteSelectedText,
-												handler : this.onDeleteSelected,
-												scope : this
-											}]
-								}),
-						scope : this,
-						disabled : true,
-						itemId : 'delete',
-						iconCls : config.deleteButtonCls || 'pluploadDeleteCls'
-					})]
+						scope : this
+					}]
+				}),
+				scope : this,
+				disabled : true,
+				itemId : 'delete',
+				iconCls : config.deleteButtonCls || 'pluploadDeleteCls'
+			})]
 		};
 
 		// Progress-Bar (bottom)
 		this.progressBarSingle = new Ext.ProgressBar({
-					flex : 1,
-					animate : true
-				});
+			flex : 1,
+			animate : true
+		});
 		this.progressBarAll = new Ext.ProgressBar({
-					flex : 2,
-					animate : true
-				});
+			flex : 2,
+			animate : true
+		});
 
 		this.bbar = {
 			layout : 'hbox',
@@ -183,30 +185,30 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 				paddingLeft : '5px'
 			},
 			items : [this.texts.progressCurrentFile, this.progressBarSingle, {
-						xtype : 'tbtext',
-						itemId : 'single',
-						style : 'text-align:right',
-						text : '',
-						width : 100
-					}, this.texts.progressTotal, this.progressBarAll, {
-						xtype : 'tbtext',
-						itemId : 'all',
-						style : 'text-align:right',
-						text : '',
-						width : 100
-					}, {
-						xtype : 'tbtext',
-						itemId : 'speed',
-						style : 'text-align:right',
-						text : '',
-						width : 100
-					}, {
-						xtype : 'tbtext',
-						itemId : 'remaining',
-						style : 'text-align:right',
-						text : '',
-						width : 100
-					}]
+				xtype : 'tbtext',
+				itemId : 'single',
+				style : 'text-align:right',
+				text : '',
+				width : 100
+			}, this.texts.progressTotal, this.progressBarAll, {
+				xtype : 'tbtext',
+				itemId : 'all',
+				style : 'text-align:right',
+				text : '',
+				width : 100
+			}, {
+				xtype : 'tbtext',
+				itemId : 'speed',
+				style : 'text-align:right',
+				text : '',
+				width : 100
+			}, {
+				xtype : 'tbtext',
+				itemId : 'remaining',
+				style : 'text-align:right',
+				text : '',
+				width : 100
+			}]
 		};
 
 		this.callParent(arguments);
@@ -220,7 +222,7 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 
 	,
 	renderStatus : function(value, meta, record, rowIndex, colIndex, store,
-			view) {
+							view) {
 		var s = this.texts.status[value - 1];
 		if (value == 2) {
 			s += " " + record.get("percent") + " %";
@@ -241,35 +243,35 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 	,
 	initPlUpload : function() {
 		this.uploader = new plupload.Uploader({
-					url : this.url,
-					runtimes : this.pluploadRuntimes,
-					browse_button : this.getTopToolbar()
-							.getComponent('addButton').getEl().dom.id,
-					container : this.getEl().dom.id,
-					max_file_size : this.max_file_size || '',
-					resize : this.resize || '',
-					flash_swf_url : this.pluploadPath + '/plupload.flash.swf',
-					silverlight_xap_url : this.pluploadPath
-							+ 'plupload.silverlight.xap',
-					filters : this.filters || [],
-					chunk_size : this.chunk_size,
-					unique_names : this.unique_names,
-					multipart : this.multipart,
-					multipart_params : this.multipart_params || null,
-					drop_element : this.getEl().dom.id,
-					required_features : this.required_features || null
-				});
+			url : this.url,
+			runtimes : this.pluploadRuntimes,
+			browse_button : this.getTopToolbar()
+				.getComponent('addButton').getEl().dom.id,
+			container : this.getEl().dom.id,
+			max_file_size : this.max_file_size || '',
+			resize : this.resize || '',
+			flash_swf_url : this.pluploadPath + '/plupload.flash.swf',
+			silverlight_xap_url : this.pluploadPath
+			+ 'plupload.silverlight.xap',
+			filters : this.filters || [],
+			chunk_size : this.chunk_size,
+			unique_names : this.unique_names,
+			multipart : this.multipart,
+			multipart_params : this.multipart_params || null,
+			drop_element : this.getEl().dom.id,
+			required_features : this.required_features || null
+		});
 
 		// Events
 		Ext
-				.each(
-						['Init', 'ChunkUploaded', 'FilesAdded', 'FilesRemoved',
-								'FileUploaded', 'PostInit', 'QueueChanged',
-								'Refresh', 'StateChanged', 'UploadFile',
-								'UploadProgress', 'Error'], function(v) {
-							this.uploader.bind(v, eval("this.Plupload" + v),
-									this);
-						}, this);
+			.each(
+			['Init', 'ChunkUploaded', 'FilesAdded', 'FilesRemoved',
+				'FileUploaded', 'PostInit', 'QueueChanged',
+				'Refresh', 'StateChanged', 'UploadFile',
+				'UploadProgress', 'Error'], function(v) {
+				this.uploader.bind(v, eval("this.Plupload" + v),
+					this);
+			}, this);
 
 		// Init Plupload
 		this.uploader.init();
@@ -278,25 +280,25 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 	,
 	onDeleteSelected : function() {
 		Ext.each(this.getView().getSelectionModel().getSelection(), function(
-						record) {
-					this.remove_file(record.get('id'));
-				}, this);
+			record) {
+			this.remove_file(record.get('id'));
+		}, this);
 	}
 
 	,
 	onDeleteAll : function() {
 		this.store.each(function(record) {
-					this.remove_file(record.get('id'));
-				}, this);
+			this.remove_file(record.get('id'));
+		}, this);
 	}
 
 	,
 	onDeleteUploaded : function() {
 		this.store.each(function(record) {
-					if (record.get('status') == 5) {
-						this.remove_file(record.get('id'));
-					}
-				}, this);
+			if (record.get('status') == 5) {
+				this.remove_file(record.get('id'));
+			}
+		}, this);
 	}
 
 	,
@@ -331,8 +333,8 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 	,
 	updateStore : function(files) {
 		Ext.each(files, function(data) {
-					this.updateStoreFile(data);
-				}, this);
+			this.updateStoreFile(data);
+		}, this);
 	}
 
 	,
@@ -360,16 +362,16 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 		var id = record.get('id');
 
 		Ext.each(this.success, function(v) {
-					if (v && v.id == id) {
-						Ext.Array.remove(this.success, v);
-					}
-				}, this);
+			if (v && v.id == id) {
+				Ext.Array.remove(this.success, v);
+			}
+		}, this);
 
 		Ext.each(this.failed, function(v) {
-					if (v && v.id == id) {
-						Ext.Array.remove(this.failed, v);
-					}
-				}, this);
+			if (v && v.id == id) {
+				Ext.Array.remove(this.failed, v);
+			}
+		}, this);
 	}
 
 	,
@@ -377,11 +379,11 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 		var canUpload = false;
 		if (this.uploader.state != 2) {
 			this.store.each(function(record) {
-						if (record.get("status") == 1) {
-							canUpload = true;
-							return false;
-						}
-					}, this);
+				if (record.get("status") == 1) {
+					canUpload = true;
+					return false;
+				}
+			}, this);
 		}
 		this.getTopToolbar().getComponent('upload').setDisabled(!canUpload);
 	}
@@ -394,11 +396,11 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 		var uploaded = queueProgress.loaded;
 		this.getBottomToolbar().getComponent('all').setText(Ext.util.Format
 				.fileSize(uploaded)
-				+ "/" + Ext.util.Format.fileSize(total));
+			+ "/" + Ext.util.Format.fileSize(total));
 
 		if (total > 0) {
 			this.progressBarAll.updateProgress(queueProgress.percent / 100,
-					queueProgress.percent + " %");
+				queueProgress.percent + " %");
 		} else {
 			this.progressBarAll.updateProgress(0, ' ');
 		}
@@ -411,12 +413,12 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 			var minutes = parseInt(totalSec / 60) % 60;
 			var seconds = totalSec % 60;
 			var timeRemaining = result = (hours < 10 ? "0" + hours : hours)
-					+ ":" + (minutes < 10 ? "0" + minutes : minutes) + ":"
-					+ (seconds < 10 ? "0" + seconds : seconds);
+				+ ":" + (minutes < 10 ? "0" + minutes : minutes) + ":"
+				+ (seconds < 10 ? "0" + seconds : seconds);
 			this.getBottomToolbar().getComponent('speed')
-					.setText(Ext.util.Format.fileSize(speed) + '/s');
+				.setText(Ext.util.Format.fileSize(speed) + '/s');
 			this.getBottomToolbar().getComponent('remaining')
-					.setText(timeRemaining);
+				.setText(timeRemaining);
 		} else {
 			this.getBottomToolbar().getComponent('speed').setText('');
 			this.getBottomToolbar().getComponent('remaining').setText('');
@@ -436,10 +438,10 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 			uploaded = this.loadedFile; // So we use this Hack to store the
 										// value which is one step back
 			this.getBottomToolbar().getComponent('single')
-					.setText(Ext.util.Format.fileSize(uploaded) + "/"
-							+ Ext.util.Format.fileSize(total));
+				.setText(Ext.util.Format.fileSize(uploaded) + "/"
+				+ Ext.util.Format.fileSize(total));
 			this.progressBarSingle.updateProgress(file.percent / 100,
-					(file.percent).toFixed(0) + " %");
+				(file.percent).toFixed(0) + " %");
 		}
 	}
 
@@ -448,13 +450,13 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 		this.getTopToolbar().getComponent('addButton').setDisabled(false);
 		// console.log("Runtime: ", data.runtime);
 		if (data.runtime == "flash" || data.runtime == "silverlight"
-				|| data.runtime == "html4") {
+			|| data.runtime == "html4") {
 			this.view.emptyText = this.texts.noDragDropAvailable;
 		} else {
 			this.view.emptyText = this.texts.DragDropAvailable
 		}
 		this.view.emptyText = String.format(this.texts.emptyTextTpl,
-				this.view.emptyText);
+			this.view.emptyText);
 		this.view.refresh();
 
 		this.updateProgress();
@@ -474,22 +476,30 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 	,
 	PluploadFilesRemoved : function(uploader, files) {
 		Ext.each(files, function(file) {
-					this.store.remove(this.store.getById(file.id));
-				}, this);
+			this.store.remove(this.store.getById(file.id));
+		}, this);
 
 		this.updateProgress();
 	}
 
 	,
 	PluploadFileUploaded : function(uploader, file, status) {
-		var response = Ext.JSON.decode(status.response);
+		try {
+			var response = Ext.JSON.decode(status.response);
+		} catch (e) {
+			var response = {};
+		}
+
+		this.lastResponse = response;
+		this.lastStatus = status;
+
 		if (response.result == 'OK') {
 			file.server_error = 0;
 			this.success.push(file);
 		} else {
 			if (response.message) {
 				file.msg = '<span style="color: red">' + response.message
-						+ '</span>';
+					+ '</span>';
 			}
 			file.server_error = 1;
 			this.failed.push(file);
@@ -521,9 +531,16 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 				this.getTopToolbar().getComponent('cancel').setDisabled(false);
 			}
 		} else {
-			this.fireEvent('uploadcomplete', this, this.success, this.failed);
+			this.fireEvent(
+				'uploadcomplete',
+				this,
+				this.success,
+				this.failed,
+				{ status: this.lastStatus, response: this.lastResponse }
+			);
+
 			if(this.getTopToolbar()) {
-				this.getTopToolbar().getComponent('cancel').setDisabled(true);	
+				this.getTopToolbar().getComponent('cancel').setDisabled(true);
 			}
 		}
 	}
@@ -548,22 +565,23 @@ Ext.define('Ext.ux.panel.UploadPanel', {
 
 	,
 	PluploadError : function(uploader, data) {
-		console.info(arguments);
 		data.file.status = 4;
 		if (data.code == -600) {
 			data.file.msg = String.format(
-					'<span style="color: red">{0}</span>',
-					this.texts.statusInvalidSizeText);
+				'<span style="color: red">{0}</span>',
+				this.texts.statusInvalidSizeText);
 		} else if (data.code == -700) {
 			data.file.msg = String.format(
-					'<span style="color: red">{0}</span>',
-					this.texts.statusInvalidExtensionText);
+				'<span style="color: red">{0}</span>',
+				this.texts.statusInvalidExtensionText);
 		} else {
 			data.file.msg = String.format(
-					'<span style="color: red">{2} ({0}: {1})</span>',
-					data.code, data.details, data.message);
+				'<span style="color: red">{2} ({0}: {1})</span>',
+				data.code, data.details, data.message);
 		}
 		this.updateStoreFile(data.file);
+		this.failed.push(data);
+
 		this.updateProgress();
 	}
 });
@@ -575,7 +593,7 @@ Ext.util.Format.fileSize = function(value) {
 		var e = Math.floor(Math.log(value) / Math.log(1024));
 		if (e > 0) {
 			return (value / Math.pow(1024, Math.floor(e))).toFixed(2) + " "
-					+ s[e];
+				+ s[e];
 		} else {
 			return value + " " + s[e];
 		}
