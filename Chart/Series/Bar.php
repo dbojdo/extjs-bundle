@@ -18,7 +18,7 @@ class Bar extends Series
      * @JMS\SerializedName("xPadding")
      * @JMS\Groups({"chartInfo"})
      */
-    private $xPadding;
+    private $xPadding = 0;
 
     /**
      * @var float
@@ -26,7 +26,15 @@ class Bar extends Series
      * @JMS\SerializedName("yPadding")
      * @JMS\Groups({"chartInfo"})
      */
-    private $yPadding;
+    private $yPadding = 10;
+
+    /**
+     * @var
+     * @JMS\Type("double")
+     * @JMS\SerializedName("xPadding")
+     * @JMS\Groups({"chartInfo"})
+     */
+    private $gutter = 38.2;
 
     /**
      * @var bool
@@ -82,5 +90,21 @@ class Bar extends Series
     public function setColumn($column)
     {
         $this->column = (bool) $column;
+    }
+
+    /**
+     * @return float
+     */
+    public function getGutter()
+    {
+        return $this->gutter;
+    }
+
+    /**
+     * @param float $gutter
+     */
+    public function setGutter($gutter)
+    {
+        $this->gutter = $gutter;
     }
 }
