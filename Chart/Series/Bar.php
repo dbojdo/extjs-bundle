@@ -31,7 +31,7 @@ class Bar extends Series
     /**
      * @var
      * @JMS\Type("double")
-     * @JMS\SerializedName("xPadding")
+     * @JMS\SerializedName("gutter")
      * @JMS\Groups({"chartInfo"})
      */
     private $gutter = 38.2;
@@ -43,6 +43,14 @@ class Bar extends Series
      * @JMS\Groups({"chartInfo"})
      */
     private $column = false;
+
+    /**
+     * @var array
+     * @JMS\Type("array")
+     * @JMS\SerializedName("style")
+     * @JMS\Groups({"chartInfo"})
+     */
+    private $style = array();
 
     /**
      * @return float
@@ -106,5 +114,21 @@ class Bar extends Series
     public function setGutter($gutter)
     {
         $this->gutter = $gutter;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStyle()
+    {
+        return $this->style;
+    }
+
+    /**
+     * @param array $style
+     */
+    public function setStyle(array $style)
+    {
+        $this->style = $style;
     }
 }
