@@ -38,7 +38,7 @@ Ext.define('Webit.view.grid.EditableGrid',{
 			disabled: true
 		},{
 			iconCls: 'fam-silk-arrow_refresh',
-			itemId: 'refresh',
+			itemId: 'reload',
 			tooltip: 'Odśwież',
 			hidden: true
 		}]

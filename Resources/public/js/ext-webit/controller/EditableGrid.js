@@ -15,7 +15,7 @@ Ext.define('Webit.controller.EditableGrid',{
 					}
 				}
 			},
-			'webit_grid_editablegrid button[itemId="refresh"]' : {
+			'webit_grid_editablegrid button[itemId="reload"]' : {
 				click: function(btn) {
 					btn.up('grid').getStore().reload();
 				}
