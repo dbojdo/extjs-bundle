@@ -18,7 +18,7 @@ Ext.define('Webit.view.grid.EditableGrid',{
   	cancelBtnText: 'Anuluj'
 	},
 	buttonsVisibility: {
-		refresh: false
+		reload: false
 	},
 	dockedItems: [{
 		xtype: 'toolbar',
