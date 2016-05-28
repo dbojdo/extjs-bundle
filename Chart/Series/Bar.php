@@ -97,7 +97,7 @@ class Bar extends Series
      */
     public function setColumn($column)
     {
-        $this->column = (bool) $column;
+        $this->column = (bool)$column;
     }
 
     /**

@@ -19,28 +19,29 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('webit_ext_js');
         $rootNode
-        	->children()
-        		->arrayNode('download_url')
-        			->defaultValue(array(
-        					'4.2.1' => 'http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip',
-        					'4.2.0' => 'http://cdn.sencha.com/ext/gpl/ext-4.2.0-gpl.zip',
-        					'4.1.1' => 'http://cdn.sencha.io/ext-4.1.1-gpl.zip',
-        					'3.4.0' => 'http://extjs.cachefly.net/ext-3.4.0.zip',
-        					'2.3.0' => 'http://dev.sencha.com/deploy/ext-2.3.0.zip'
-        			))
-        			->prototype('scalar')->end()
-        	->end()
-        	->arrayNode('security')
-        		->addDefaultsIfNotSet()
-        		->children()
-        			->scalarNode('model')->defaultValue('Webit.security.User')->end()
-        		->end()
-        	->end()
-					->scalarNode('version')->defaultValue('4.2.1')->end()
-        	->scalarNode('js_root_dir')->defaultValue('/js')->end()
-        ->end();
+            ->children()
+                ->arrayNode('download_url')
+                ->defaultValue(
+                    array(
+                        '4.2.1' => 'http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip',
+                        '4.2.0' => 'http://cdn.sencha.com/ext/gpl/ext-4.2.0-gpl.zip',
+                        '4.1.1' => 'http://cdn.sencha.io/ext-4.1.1-gpl.zip',
+                        '3.4.0' => 'http://extjs.cachefly.net/ext-3.4.0.zip',
+                        '2.3.0' => 'http://dev.sencha.com/deploy/ext-2.3.0.zip'
+                    )
+                )
+                ->prototype('scalar')->end()
+                ->end()
+                ->arrayNode('security')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('model')->defaultValue('Webit.security.User')->end()
+                    ->end()
+                ->end()
+                ->scalarNode('version')->defaultValue('4.2.1')->end()
+                ->scalarNode('js_root_dir')->defaultValue('/js')->end()
+            ->end();
 
         return $treeBuilder;
     }
 }
-?>

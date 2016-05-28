@@ -1,10 +1,11 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Store;
 
-interface DataClassAwareInterface {
-    
+interface DataClassAwareInterface
+{
+
     /**
-     * 
+     *
      * @param string $dataClass
      */
     public function setDataClass($dataClass);

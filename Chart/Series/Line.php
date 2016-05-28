@@ -1,5 +1,6 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\Chart\Series;
+
 use JMS\Serializer\Annotation as JMS;
 
 class Line extends Series
