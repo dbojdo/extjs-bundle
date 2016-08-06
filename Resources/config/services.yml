@@ -11,35 +11,35 @@ services:
   webit_ext_js.tree_store_abstract:
     class: %webit_ext_js.tree_store_abstract.class%
     calls:
-      - [setContainer, [@service_container]]
+      - [setContainer, ["@service_container"]]
       - [init]
 
   webit_ext_js.store_abstract:
     class: %webit_ext_js.tree_store_abstract.class%
     calls:
-      - [setContainer, [@service_container]]
+      - [setContainer, ["@service_container"]]
       - [init]
 
   webit_ext_js.controller_store:
     class: %webit_ext_js.controller_store.class%
     calls:
-        - [ setContainer, [ @service_container ] ]
+        - [setContainer, ["@service_container"]]
 
   webit_ext_js.controller_tree_store:
     class: %webit_ext_js.controller_tree_store.class%
     calls:
-        - [ setContainer, [ @service_container ] ]
+        - [setContainer, [ "@service_container" ]]
 
   webit_ext_js.static_data_exposer:
     class: %webit_ext_js.static_data_exposer.class%
 
   webit_ext_js.controller.extjs:
     class: %webit_ext_js.controller.extjs.class%
-    arguments: [@fos_rest.view_handler]
+    arguments: ["@fos_rest.view_handler"]
     calls:
-        - [ setContainer, [ @service_container ] ]
+        - [setContainer, ["@service_container"]]
 
   webit_ext_js.entity_store:
     class: %webit_ext_js.entity_store.class%
-    arguments: [{},@doctrine.orm.entity_manager]
+    arguments: [{}, "@doctrine.orm.entity_manager"]
     abstract: true
