@@ -34,6 +34,7 @@ class Filter implements FilterInterface
      *
      * @var string
      * @JMS\Type("string")
+     * @JMS\SerializedName("comparison")
      */
     protected $comparision = FilterInterface::COMPARISION_EQUAL;
 
