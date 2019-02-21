@@ -2,9 +2,7 @@
 namespace Webit\Bundle\ExtJsBundle\Store;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollectionInterface;
@@ -15,8 +13,10 @@ use Webit\Bundle\ExtJsBundle\Store\Filter\FilterCollectionInterface;
  * @author dbojdo
  *
  */
-abstract class StoreAbstract implements ExtJsStoreInterface, ContainerAwareInterface
+abstract class StoreAbstract implements ExtJsStoreInterface
 {
+    use ContainerAwareTrait;
+    
     /**
      *
      * @var ObjectManager
@@ -24,11 +24,6 @@ abstract class StoreAbstract implements ExtJsStoreInterface, ContainerAwareInter
     protected $om;
 
     protected $options;
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
     public function __construct(ObjectManager $om, array $options = array())
     {
@@ -186,13 +181,5 @@ abstract class StoreAbstract implements ExtJsStoreInterface, ContainerAwareInter
     public function getDataClass()
     {
         return null;
-    }
-
-    /**
-     * @param ContainerInterface|null $container
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 }

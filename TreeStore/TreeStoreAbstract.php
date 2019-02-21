@@ -1,10 +1,8 @@
 <?php
 namespace Webit\Bundle\ExtJsBundle\TreeStore;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Webit\Bundle\ExtJsBundle\Store\ExtJsJson;
 
 /**
@@ -12,8 +10,10 @@ use Webit\Bundle\ExtJsBundle\Store\ExtJsJson;
  * @author dbojdo
  *
  */
-abstract class TreeStoreAbstract implements TreeStoreInterface, ContainerAwareInterface
+abstract class TreeStoreAbstract implements TreeStoreInterface
 {
+    use ContainerAwareTrait;
+
     /**
      *
      * @var ObjectManager
@@ -24,11 +24,6 @@ abstract class TreeStoreAbstract implements TreeStoreInterface, ContainerAwareIn
      * @var array
      */
     protected $serializerGroups = array();
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
     public function __construct(ObjectManager $om)
     {
@@ -54,12 +49,4 @@ abstract class TreeStoreAbstract implements TreeStoreInterface, ContainerAwareIn
     }
 
     abstract protected function fetchNode($id);
-
-    /**
-     * @param ContainerInterface|null $container
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
 }
