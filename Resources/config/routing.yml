@@ -1,9 +1,9 @@
 webit_extjs_security_context:
-    pattern:   /get-security-context
+    path:   /get-security-context
     defaults:  { _controller: webit_ext_js.controller.extjs:getSecurityContextAction, _format: javascript  }
 
 webit_extjs_expose_static_data:
-    pattern:   /expose-static-data
+    path:   /expose-static-data
     defaults:  { _controller: webit_ext_js.controller.extjs:exposeStaticDataAction }
     options:
         expose: true
