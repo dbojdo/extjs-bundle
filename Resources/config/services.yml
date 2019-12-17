@@ -1,45 +1,42 @@
-parameters:
-  webit_ext_js.tree_store_abstract.class: Webit\Bundle\ExtJsBundle\TreeStore\TreeStoreAbstract
-  webit_ext_js.entity_store.class: Webit\Bundle\ExtJsBundle\Store\EntityStore
-  webit_ext_js.store_abstract.class: Webit\Bundle\ExtJsBundle\Store\StoreAbstract
-  webit_ext_js.controller.extjs.class: Webit\Bundle\ExtJsBundle\Controller\ExtJsController
-  webit_ext_js.controller_store.class: Webit\Bundle\ExtJsBundle\Controller\StoreController
-  webit_ext_js.controller_tree_store.class: Webit\Bundle\ExtJsBundle\Controller\TreeStoreController
-  webit_ext_js.static_data_exposer.class: Webit\Bundle\ExtJsBundle\StaticData\StaticDataExposer
-  
 services:
   webit_ext_js.tree_store_abstract:
-    class: %webit_ext_js.tree_store_abstract.class%
+    class: Webit\Bundle\ExtJsBundle\TreeStore\TreeStoreAbstract
     calls:
       - [setContainer, ["@service_container"]]
       - [init]
 
   webit_ext_js.store_abstract:
-    class: %webit_ext_js.tree_store_abstract.class%
+    class: Webit\Bundle\ExtJsBundle\Store\StoreAbstract
     calls:
       - [setContainer, ["@service_container"]]
       - [init]
 
+  webit_ext_js.controller_store.factory:
+    class: Webit\Bundle\ExtJsBundle\Controller\StoreControllerFactory
+    arguments: ["@service_container", "@jms_serializer", "@request_stack"]
+
   webit_ext_js.controller_store:
-    class: %webit_ext_js.controller_store.class%
-    calls:
-        - [setContainer, ["@service_container"]]
+    class: Webit\Bundle\ExtJsBundle\Controller\StoreController
+    factory: ["@webit_ext_js.controller_store.factory", "createStoreController"]
 
   webit_ext_js.controller_tree_store:
-    class: %webit_ext_js.controller_tree_store.class%
-    calls:
-        - [setContainer, [ "@service_container" ]]
+    class: Webit\Bundle\ExtJsBundle\Controller\TreeStoreController
+    factory: ["@webit_ext_js.controller_store.factory", "createTreeStoreController"]
 
   webit_ext_js.static_data_exposer:
-    class: %webit_ext_js.static_data_exposer.class%
+    class: Webit\Bundle\ExtJsBundle\StaticData\StaticDataExposer
 
   webit_ext_js.controller.extjs:
-    class: %webit_ext_js.controller.extjs.class%
-    arguments: ["@fos_rest.view_handler"]
+    class: Webit\Bundle\ExtJsBundle\Controller\ExtJsController
+    arguments: ["@jms_serializer", "@webit_ext_js.static_data_exposer", "@webit_ext_js.controller.security_context_exposer"]
     calls:
         - [setContainer, ["@service_container"]]
 
+  webit_ext_js.controller.security_context_exposer:
+    class: Webit\Bundle\ExtJsBundle\StaticData\SecurityContextExposer
+    arguments: ["@security.token_storage", "@security.role_hierarchy", "%webit_ext_js.security%"]
+
   webit_ext_js.entity_store:
-    class: %webit_ext_js.entity_store.class%
+    class: Webit\Bundle\ExtJsBundle\Store\EntityStore
     arguments: [{}, "@doctrine.orm.entity_manager"]
     abstract: true

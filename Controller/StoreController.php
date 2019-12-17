@@ -1,11 +1,13 @@
 <?php
+
 namespace Webit\Bundle\ExtJsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Controller\Annotations as FOS;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Webit\Bundle\ExtJsBundle\Store\ExtJsJson;
 use Webit\Bundle\ExtJsBundle\Store\ExtJsStoreInterface;
 use JMS\Serializer\SerializationContext;
@@ -15,29 +17,33 @@ use JMS\Serializer\SerializationContext;
  * @author dbojdo
  * @FOS\NamePrefix("webit_extjs_")
  */
-class StoreController extends FOSRestController
+final class StoreController
 {
-    /**
-     *
-     * @var ExtJsStoreInterface
-     */
-    protected $store;
+    /** @var SerializerInterface */
+    private $serializer;
+
+    /** @var ExtJsStoreInterface */
+    private $store;
+
+    public function __construct(SerializerInterface $serializer, ExtJsStoreInterface $store = null)
+    {
+        $this->serializer = $serializer;
+        $this->store = $store;
+    }
 
     /**
      * @FOS\QueryParam(name="id", description="Page of the overview.")
      * @FOS\Route("/store/item")
      *
      * @param ParamFetcher $paramFetcher
-     *
+     * @param Request $request
      * @return Response
      */
-    public function getItemAction(ParamFetcher $paramFetcher)
+    public function getItemAction(ParamFetcher $paramFetcher, Request $request)
     {
-        $json = $this->getStore()->loadModel($paramFetcher->get('id'), $this->getRequest()->query->all());
+        $json = $this->store()->loadModel($paramFetcher->get('id'), $request->query->all());
 
-        $r = $this->createResponse($json);
-
-        return $r;
+        return $this->createResponse($json);
     }
 
     /**
@@ -51,12 +57,13 @@ class StoreController extends FOSRestController
      * @FOS\Route("/store/items")
      *
      * @param ParamFetcher $paramFetcher
+     * @param Request $request
      * @return Response
      */
-    public function getItemsAction(ParamFetcher $paramFetcher)
+    public function getItemsAction(ParamFetcher $paramFetcher, Request $request)
     {
         $f = urldecode($paramFetcher->get('filter'));
-        $filters = $this->container->get('serializer')->deserialize(
+        $filters = $this->serializer->deserialize(
             $f,
             'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Filter\Filter>',
             'json'
@@ -64,15 +71,15 @@ class StoreController extends FOSRestController
         $filters = new \Webit\Bundle\ExtJsBundle\Store\Filter\FilterCollection($filters);
 
         $s = urldecode($paramFetcher->get('sort'));
-        $sort = $this->container->get('serializer')->deserialize(
+        $sort = $this->serializer->deserialize(
             $s,
             'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Sorter\Sorter>',
             'json'
         );
         $sort = new \Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection($sort);
 
-        $json = $this->getStore()->getModelList(
-            $this->getRequest()->query,
+        $json = $this->$this->store()->getModelList(
+            $request->query,
             $filters,
             $sort,
             $paramFetcher->get('page'),
@@ -80,49 +87,47 @@ class StoreController extends FOSRestController
             $paramFetcher->get('start')
         );
 
-        $r = $this->createResponse($json);
-
-        return $r;
+        return $this->createResponse($json);
     }
 
     /**
-     *
+     * @param Request $request
+     * @return Response
      * @FOS\Route("/store/items")
      */
-    public function postItemsAction()
+    public function postItemsAction(Request $request)
     {
-        $root = $this->getStore()->getOption('writer.root');
-        $items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent();
+        $root = $this->$this->store()->getOption('writer.root');
+        $items = $root ? $request->request->get($root) : $this->getRequest()->getContent();
 
-        $dataClass = $this->getStore()->getDataClass();
+        $dataClass = $this->$this->store()->getDataClass();
         $desrializeClass = $dataClass ? 'ArrayCollection<' . $dataClass . '>' : 'ArrayCollection';
-        $arData = $this->container->get('serializer')->deserialize($items, $desrializeClass, 'json');
+        $arData = $this->serializer->deserialize($items, $desrializeClass, 'json');
 
-        $json = $this->getStore()->createModels(new ArrayCollection($arData));
+        $json = $this->$this->store()->createModels(new ArrayCollection($arData));
 
-        $r = $this->createResponse($json);
-
-        return $r;
+        return $this->createResponse($json);
     } // create
 
     /**
+     * @param Request $request
+     * @return Response
      * @FOS\Route("/store/items")
      */
-    public function putItemsAction()
+    public function putItemsAction(Request $request)
     {
-        $root = $this->getStore()->getOption('writer.root');
+        $store = $this->$this->store();
+        $root = $store->getOption('writer.root');
 
-        $items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent();
+        $items = $root ? $request->request->get($root) : $this->getRequest()->getContent();
 
-        $dataClass = $this->getStore()->getDataClass();
+        $dataClass = $store->getDataClass();
         $desrializeClass = $dataClass ? 'ArrayCollection<' . $dataClass . '>' : 'ArrayCollection';
-        $arData = $this->container->get('serializer')->deserialize($items, $desrializeClass, 'json');
+        $arData = $this->serializer->deserialize($items, $desrializeClass, 'json');
 
-        $json = $this->getStore()->updateModels(new ArrayCollection($arData));
+        $json = $store->updateModels(new ArrayCollection($arData));
 
-        $r = $this->createResponse($json);
-
-        return $r;
+        return $this->createResponse($json);
     } // update
 
     /**
@@ -130,22 +135,22 @@ class StoreController extends FOSRestController
      * @FOS\Route("/store/items")
      *
      * @param ParamFetcher $paramFetcher
+     * @param Request $request
      * @return Response
      */
-    public function deleteItemsAction(ParamFetcher $paramFetcher)
+    public function deleteItemsAction(ParamFetcher $paramFetcher, Request $request)
     {
-        $root = $this->getStore()->getOption('writer.root');
-        $items = $root ? $this->getRequest()->request->get($root) : $this->getRequest()->getContent();
+        $store = $this->$this->store();
+        $root = $store->getOption('writer.root');
+        $items = $root ? $request->request->get($root) : $request->getContent();
 
-        $dataClass = $this->getStore()->getDataClass();
+        $dataClass = $request->getDataClass();
         $desrializeClass = $dataClass ? 'ArrayCollection<' . $dataClass . '>' : 'ArrayCollection';
-        $arData = $this->container->get('serializer')->deserialize($items, $desrializeClass, 'json');
+        $arData = $this->serializer->deserialize($items, $desrializeClass, 'json');
 
-        $json = $this->getStore()->deleteModel($arData, $this->getRequest()->request->all());
-
-        $r = $this->createResponse($json);
-
-        return $r;
+        return $this->createResponse(
+            $store->deleteModel($arData, $this->getRequest()->request->all())
+        );
     }
 
     /**
@@ -159,24 +164,24 @@ class StoreController extends FOSRestController
      * @param ParamFetcher $paramFetcher
      * @return Response
      */
-    public function getChartDataAction(ParamFetcher $paramFetcher)
+    public function getChartDataAction(ParamFetcher $paramFetcher, Request $request)
     {
-        $filters = $this->container->get('serializer')->deserialize(
+        $filters = $this->serializer->deserialize(
             $paramFetcher->get('filter'),
             'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Filter\Filter>',
             'json'
         );
         $filters = new \Webit\Bundle\ExtJsBundle\Store\Filter\FilterCollection($filters);
 
-        $sort = $this->container->get('serializer')->deserialize(
+        $sort = $this->serializer->deserialize(
             $paramFetcher->get('sort'),
             'ArrayCollection<Webit\Bundle\ExtJsBundle\Store\Sorter\Sorter>',
             'json'
         );
         $sort = new \Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection($sort);
 
-        $json = $this->getStore()->loadChartData(
-            $this->getRequest()->query->all(),
+        $json = $this->$this->store()->loadChartData(
+            $request->query->all(),
             $filters,
             $sort,
             $paramFetcher->get('page'),
@@ -184,62 +189,22 @@ class StoreController extends FOSRestController
             $paramFetcher->get('start')
         );
 
-        $r = $this->createResponse($json);
-
-        return $r;
-    }
-
-    protected function getStore()
-    {
-        if (is_null($this->store)) {
-            $this->setStoreService();
-        }
-
-        return $this->store;
-    }
-
-    protected function setStoreService()
-    {
-        $storeId = $this->getRequest()->query->get('store');
-        $this->store = $this->findStoreService($storeId);
-    }
-
-    /**
-     *
-     * @param string $storeId
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
-     * @return \Webit\Bundle\ExtJsBundle\Store\ExtJsStoreInterface
-     */
-    protected function findStoreService($storeId)
-    {
-        if ($this->container->has($storeId) == false) {
-            throw new \RuntimeException('Required service couldn\'t be found is service container.');
-        }
-
-        $storeService = $this->container->get($storeId);
-
-        if (($storeService instanceof ExtJsStoreInterface) == false) {
-            throw new \InvalidArgumentException('Service must be instance of ExtJsStoreInterface.');
-        }
-
-        return $storeService;
+        return $this->createResponse($json);
     }
 
     private function createResponse(ExtJsJson $json)
     {
-        $r = new Response();
-        $r->headers->add(array('Content-Type' => 'application/json'));
-        $r->setStatusCode(200, 'OK');
-        $r->setContent($this->get('serializer')->serialize($json, 'json', $this->getSerializerContext($json)));
+        $response = new Response();
+        $response->headers->add(array('Content-Type' => 'application/json'));
+        $response->setStatusCode(200, 'OK');
+        $response->setContent($this->get('serializer')->serialize($json, 'json', $this->getSerializerContext($json)));
 
-        return $r;
+        return $response;
     }
 
     private function getSerializerContext(ExtJsJson $json)
     {
         $context = SerializationContext::create();
-
         $arGroups = $json->getSerializerGroups();
         if (count($arGroups) > 0) {
             $context->setGroups($json->getSerializerGroups());
@@ -250,5 +215,17 @@ class StoreController extends FOSRestController
         }
 
         return $context;
+    }
+
+    /**
+     * @return ExtJsStoreInterface
+     */
+    private function store()
+    {
+        if (!$this->store) {
+            throw new \RuntimeException("Store has not been set");
+        }
+
+        return $this->store;
     }
 }

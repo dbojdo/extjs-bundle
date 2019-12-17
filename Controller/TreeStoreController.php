@@ -1,14 +1,12 @@
 <?php
+
 namespace Webit\Bundle\ExtJsBundle\Controller;
 
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Controller\Annotations as FOS;
-
-use FOS\RestBundle\View\View;
-
+use JMS\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use Webit\Bundle\ExtJsBundle\Store\ExtJsJson;
 use Webit\Bundle\ExtJsBundle\TreeStore\TreeStoreInterface;
 use JMS\Serializer\SerializationContext;
@@ -18,13 +16,19 @@ use JMS\Serializer\SerializationContext;
  * @author dbojdo
  * @FOS\NamePrefix("webit_extjs_")
  */
-class TreeStoreController extends FOSRestController
+final class TreeStoreController
 {
-    /**
-     *
-     * @var TreeStoreInterface
-     */
-    protected $store;
+    /** @var SerializerInterface */
+    private $serializer;
+
+    /** @var TreeStoreInterface */
+    private $store;
+
+    public function __construct(SerializerInterface $serializer, TreeStoreInterface $store = null)
+    {
+        $this->serializer = $serializer;
+        $this->store = $store;
+    }
 
     /**
      * Returns children of given node
@@ -33,15 +37,12 @@ class TreeStoreController extends FOSRestController
      * @FOS\Route("/tree/load")
      *
      * @param ParamFetcher $paramFetcher
+     * @return Response
      */
     public function loadNodeAction(ParamFetcher $paramFetcher)
     {
-
-        $json = $this->getStore()->loadNode($paramFetcher->get('id'));
-
-        $r = $this->createResponse($json);
-
-        return $r;
+        $json = $this->store()->loadNode($paramFetcher->get('id'));
+        return $this->createResponse($json);
     }
 
     /**
@@ -49,52 +50,50 @@ class TreeStoreController extends FOSRestController
      * @FOS\QueryParam(name="id", description="Page of the overview.")
      * @FOS\QueryParam(name="node", default="root",description="Page of the overview.")
      * @FOS\Route("/tree/node-data")
+     * @param ParamFetcher $paramFetcher
+     * @param Request $request
+     * @return Response
      */
-    public function getNodeAction(ParamFetcher $paramFetcher)
+    public function getNodeAction(ParamFetcher $paramFetcher, Request $request)
     {
-        $json = $this->getStore()->loadNode($paramFetcher->get('node'));
+        $json = $this->store()->loadNode($paramFetcher->get('node'));
 
-        $r = $this->createResponse($json);
-
-        return $r;
+        return $this->createResponse($json);
     }
 
     /**
      * Return node's data
      * @FOS\QueryParam(name="id", description="Page of the overview.")
      * @FOS\Route("/tree/node")
+     * @param Request $request
+     * @return Response
      */
-    public function postNodeAction()
+    public function postNodeAction(Request $request)
     {
-        $store = $this->getStore();
-        $arNodes = $this->get('serializer')->deserialize($this->getRequest()->getContent(), $store->getDataClass());
-
-        //$json = $this->getStore()->createNodes();
     }
 
     /**
      * Move node action
      * @FOS\QueryParam(name="id", description="Page of the overview.")
      * @FOS\Route("/tree/node")
+     * @param Request $request
+     * @return Response
      */
-    public function putNodeAction()
+    public function putNodeAction(Request $request)
     {
-        $store = $this->getStore();
-        $moveAction = $this->get('serializer')->deserialize(
-            $this->getRequest()->getContent(),
+        $moveAction = $this->serializer->deserialize(
+            $request->getContent(),
             'Webit\Bundle\ExtJsBundle\TreeStore\TreeNodeMoveAction',
             'json'
         );
 
-        $json = $this->getStore()->moveNode(
+        $json = $this->store()->moveNode(
             $moveAction->getItem(),
             $moveAction->getTargetItem(),
             $moveAction->getPosition()
         );
 
-        $r = $this->createResponse($json);
-
-        return $r;
+        return $this->createResponse($json);
     }
 
     /**
@@ -104,67 +103,37 @@ class TreeStoreController extends FOSRestController
      */
     public function deleteNodeAction()
     {
-
-    }
-
-    protected function getStore()
-    {
-        if (is_null($this->store)) {
-            $this->setStoreService();
-        }
-
-        return $this->store;
-    }
-
-    protected function setStoreService()
-    {
-        $storeId = $this->getRequest()->query->get('store');
-        $this->store = $this->findStoreService($storeId);
-    }
-
-    /**
-     *
-     * @param string $storeId
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
-     * @return \Webit\Bundle\ExtJsBundle\Store\ExtJsStoreInterface
-     */
-    protected function findStoreService($storeId)
-    {
-        if ($this->container->has($storeId) == false) {
-            throw new \RuntimeException('Required service couldn\'t be found is service container.');
-        }
-
-        $storeService = $this->container->get($storeId);
-
-        if (($storeService instanceof TreeStoreInterface) == false) {
-            throw new \InvalidArgumentException('Service must be instance of TreeStoreInterface.');
-        }
-
-        return $storeService;
     }
 
     private function createResponse(ExtJsJson $json)
     {
-        $r = new Response();
-        $r->headers->add(array('Content-Type' => 'application/json'));
-        $r->setStatusCode(200, 'OK');
-        $r->setContent($this->get('serializer')->serialize($json, 'json', $this->getSerializerContext($json)));
+        $response = new Response();
+        $response->headers->add(array('Content-Type' => 'application/json'));
+        $response->setStatusCode(200, 'OK');
+        $response->setContent($this->serializer->serialize($json, 'json', $this->getSerializerContext($json)));
 
-        return $r;
+        return $response;
     }
 
     private function getSerializerContext(ExtJsJson $json)
     {
         $arGroups = $json->getSerializerGroups();
         if (count($arGroups) > 0) {
-            $context = SerializationContext::create()->setGroups($json->getSerializerGroups());
-
-            return $context;
+            return  SerializationContext::create()->setGroups($json->getSerializerGroups());
         }
 
         return null;
     }
-}
 
-?>
+    /**
+     * @return TreeStoreInterface
+     */
+    private function store()
+    {
+        if (!$this->store) {
+            throw new \RuntimeException("Store has not been set");
+        }
+
+        return $this->store;
+    }
+}
