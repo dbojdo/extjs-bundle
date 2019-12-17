@@ -78,7 +78,7 @@ final class StoreController
         );
         $sort = new \Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection($sort);
 
-        $json = $this->$this->store()->getModelList(
+        $json = $this->store()->getModelList(
             $request->query,
             $filters,
             $sort,
@@ -97,14 +97,14 @@ final class StoreController
      */
     public function postItemsAction(Request $request)
     {
-        $root = $this->$this->store()->getOption('writer.root');
+        $root = $this->store()->getOption('writer.root');
         $items = $root ? $request->request->get($root) : $this->getRequest()->getContent();
 
-        $dataClass = $this->$this->store()->getDataClass();
+        $dataClass = $this->store()->getDataClass();
         $desrializeClass = $dataClass ? 'ArrayCollection<' . $dataClass . '>' : 'ArrayCollection';
         $arData = $this->serializer->deserialize($items, $desrializeClass, 'json');
 
-        $json = $this->$this->store()->createModels(new ArrayCollection($arData));
+        $json = $this->store()->createModels(new ArrayCollection($arData));
 
         return $this->createResponse($json);
     } // create
@@ -116,7 +116,7 @@ final class StoreController
      */
     public function putItemsAction(Request $request)
     {
-        $store = $this->$this->store();
+        $store = $this->store();
         $root = $store->getOption('writer.root');
 
         $items = $root ? $request->request->get($root) : $this->getRequest()->getContent();
@@ -140,7 +140,7 @@ final class StoreController
      */
     public function deleteItemsAction(ParamFetcher $paramFetcher, Request $request)
     {
-        $store = $this->$this->store();
+        $store = $this->store();
         $root = $store->getOption('writer.root');
         $items = $root ? $request->request->get($root) : $request->getContent();
 
@@ -180,7 +180,7 @@ final class StoreController
         );
         $sort = new \Webit\Bundle\ExtJsBundle\Store\Sorter\SorterCollection($sort);
 
-        $json = $this->$this->store()->loadChartData(
+        $json = $this->store()->loadChartData(
             $request->query->all(),
             $filters,
             $sort,
@@ -197,7 +197,7 @@ final class StoreController
         $response = new Response();
         $response->headers->add(array('Content-Type' => 'application/json'));
         $response->setStatusCode(200, 'OK');
-        $response->setContent($this->get('serializer')->serialize($json, 'json', $this->getSerializerContext($json)));
+        $response->setContent($this->serializer->serialize($json, 'json', $this->getSerializerContext($json)));
 
         return $response;
     }

@@ -30,7 +30,7 @@ services:
     class: Webit\Bundle\ExtJsBundle\Controller\ExtJsController
     arguments: ["@jms_serializer", "@webit_ext_js.static_data_exposer", "@webit_ext_js.controller.security_context_exposer"]
     calls:
-        - [setContainer, ["@service_container"]]
+      - [setContainer, ["@service_container"]]
 
   webit_ext_js.controller.security_context_exposer:
     class: Webit\Bundle\ExtJsBundle\StaticData\SecurityContextExposer
