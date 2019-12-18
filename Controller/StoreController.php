@@ -98,7 +98,7 @@ final class StoreController
     public function postItemsAction(Request $request)
     {
         $root = $this->store()->getOption('writer.root');
-        $items = $root ? $request->request->get($root) : $this->getRequest()->getContent();
+        $items = $root ? $request->request->get($root) : $request->getContent();
 
         $dataClass = $this->store()->getDataClass();
         $desrializeClass = $dataClass ? 'ArrayCollection<' . $dataClass . '>' : 'ArrayCollection';
@@ -119,7 +119,7 @@ final class StoreController
         $store = $this->store();
         $root = $store->getOption('writer.root');
 
-        $items = $root ? $request->request->get($root) : $this->getRequest()->getContent();
+        $items = $root ? $request->request->get($root) : $request->getContent();
 
         $dataClass = $store->getDataClass();
         $desrializeClass = $dataClass ? 'ArrayCollection<' . $dataClass . '>' : 'ArrayCollection';
@@ -149,7 +149,7 @@ final class StoreController
         $arData = $this->serializer->deserialize($items, $desrializeClass, 'json');
 
         return $this->createResponse(
-            $store->deleteModel($arData, $this->getRequest()->request->all())
+            $store->deleteModel($arData, $request->request->all())
         );
     }
 
