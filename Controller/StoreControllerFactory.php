@@ -33,7 +33,7 @@ final class StoreControllerFactory
     {
         $store = $this->findStore();
         if ($store && !($store instanceof ExtJsStoreInterface)) {
-            throw new \InvalidArgumentException("Store is expected to be an instance of ExtJsStoreInterface");
+            return null;
         }
 
         return new StoreController($this->serializer, $store);
@@ -47,7 +47,7 @@ final class StoreControllerFactory
     {
         $store = $this->findStore();
         if ($store && !($store instanceof TreeStoreInterface)) {
-            throw new \InvalidArgumentException("Store is expected to be an instance of TreeStoreInterface");
+            return null;
         }
 
         return new TreeStoreController($this->serializer, $store);

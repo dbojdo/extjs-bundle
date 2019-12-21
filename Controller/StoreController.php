@@ -144,7 +144,7 @@ final class StoreController
         $root = $store->getOption('writer.root');
         $items = $root ? $request->request->get($root) : $request->getContent();
 
-        $dataClass = $request->getDataClass();
+        $dataClass = $store->getDataClass();
         $desrializeClass = $dataClass ? 'ArrayCollection<' . $dataClass . '>' : 'ArrayCollection';
         $arData = $this->serializer->deserialize($items, $desrializeClass, 'json');
 
