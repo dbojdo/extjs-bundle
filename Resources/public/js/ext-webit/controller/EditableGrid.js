@@ -115,6 +115,7 @@ Ext.define('Webit.controller.EditableGrid',{
 	},
 	onWindowAdd: function(btn) {
 		var grid = btn.up('grid');
+		grid.getSelectionModel().deselectAll();
 
 		winConfig = grid.getNewWindowConfig();
 		Ext.apply(winConfig,{grid: grid});
